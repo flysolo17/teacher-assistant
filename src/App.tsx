@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter,Routes ,Route} from 'react-router-dom';
+import { initializeApp } from 'firebase/app';
+import { config } from './config/config';
+import AuthRoute from './components/AuthRoute';
+import TeacherHomePage from './pages/teacher/TeacherHomePage';
+import StudentHomePage from './pages/students/StudentHomePage';
+import LoginPage from './pages/Login';
+import NotFound from './notfound/NotFound';
+import SignUpPage from './pages/SignUp';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+initializeApp(config.firebaseConfig);
+export interface IApplicationProps{
+
 }
-
+const App : React.FunctionComponent<IApplicationProps> = (props) => {
+  return (
+    <BrowserRouter>
+      <Routes>
+          <Route path='/' element={
+            <AuthRoute>
+              <TeacherHomePage/>
+            </AuthRoute>}/>
+            <Route path='/student' element={
+            <AuthRoute>
+              <StudentHomePage/>
+            </AuthRoute>}/>
+        <Route path='/signup' element={<SignUpPage/>}/>
+        <Route path='*' element={<NotFound/>}/>
+        <Route path='/login' element={<LoginPage/>}/>
+      </Routes>
+    </BrowserRouter>
+  );
+};
 export default App;
