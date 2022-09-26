@@ -5,6 +5,7 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import { userConverter, Users } from '../model/User';
 import {TextField,Box,Button, CircularProgress}from '@mui/material';
 import '../styles/login.css'
+import AlertPage from '../alerts/Alert';
 export interface ILoginPageProps {
 
 }
@@ -16,6 +17,10 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
     const [authing, setAuthing] = useState(false);
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
+    const [open , setOpen] = useState({
+      open : false,
+      message : ""
+    });
     async function identifyUser(userId : string) {
         const docRef = doc(firestore, "Users", userId).withConverter(userConverter);
         const docSnap = await getDoc(docRef);
@@ -38,11 +43,13 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
           setAuthing(false);
         const user = userCredential.user;
         identifyUser(user.uid);
+        setOpen({open : true,message : "User Signed in!"});
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode + " " + errorMessage);
         setAuthing(false);
+       setOpen({open : true,message : errorCode + " " + errorMessage});
       });
    }
     if (authing) return <div className='login-background'><CircularProgress/></div>
@@ -79,6 +86,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
       <Button variant='contained' fullWidth size='large' disableElevation onClick={() => signIn(email,password)}>Sign In</Button>
       <Button variant='contained' fullWidth size='large' color='success' disableElevation onClick={() => {navigate("/signup")}}>Create Account</Button>
      </Box>
+     <AlertPage message={open.message} open={open.open}/> 
     </div>
     );
 };

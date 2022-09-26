@@ -41,7 +41,7 @@ const AuthRoute: React.FunctionComponent<IAuthRouteProps> = (props) => {
 
         return () => AuthCheck();
     }, [auth]);
-
+    
     if (loading) return <CircularProgress />
 
     return <>{children}</>;

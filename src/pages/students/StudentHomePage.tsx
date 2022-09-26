@@ -1,8 +1,10 @@
 import { getAuth ,signOut} from "firebase/auth";
+import { useState } from "react";
+import AlertPage from "../../alerts/Alert";
 export interface IStudentHomePageProps{}
 
 const StudentHomePage : React.FunctionComponent<IStudentHomePageProps> = (props) => {
-        const auth = getAuth();
+    const auth = getAuth();
     return (
         <>
             <h1>Student {auth.currentUser?.displayName}</h1>

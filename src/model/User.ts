@@ -2,11 +2,12 @@
 import { doc, QueryDocumentSnapshot} from "firebase/firestore";
 
 export interface Users {
-    firstName : String;
-    middleName : String;
-    lastName : String;
-    type : String;
-    email : String;
+    id : string,
+    firstName : string;
+    middleName : string;
+    lastName : string;
+    type : string;
+    email : string;
 }
 export const userConverter = {
   toFirestore: (data: Users) => data,

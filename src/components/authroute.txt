@@ -1,9 +1,0 @@
-import { getAuth } from 'firebase/auth';
-import { Outlet,Navigate } from 'react-router-dom';
-
-const AuthRoute = () => {
-    let auth = getAuth()
-    return( auth.currentUser ? <Outlet/> : <Navigate to="/login"/>)
-}
-
-export default AuthRoute;
