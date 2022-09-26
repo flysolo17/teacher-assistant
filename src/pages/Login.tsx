@@ -25,11 +25,9 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
                 navigate("/");
             } else if (user.type === "Student") {
                 navigate("/student");
-            } else {
-                navigate('*');
             }
         } else {
-            navigate('/signup')
+            navigate('/*')
         }
       };
 

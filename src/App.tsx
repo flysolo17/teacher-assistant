@@ -17,16 +17,16 @@ const App : React.FunctionComponent<IApplicationProps> = (props) => {
   return (
     <BrowserRouter>
       <Routes>
-          <Route path='/' element={
+        <Route path='/' element={
             <AuthRoute>
               <TeacherHomePage/>
             </AuthRoute>}/>
-            <Route path='/student' element={
+               <Route path='/student' element={
             <AuthRoute>
               <StudentHomePage/>
             </AuthRoute>}/>
         <Route path='/signup' element={<SignUpPage/>}/>
-        <Route path='*' element={<NotFound/>}/>
+        <Route path='/*' element={<NotFound/>}/>
         <Route path='/login' element={<LoginPage/>}/>
       </Routes>
     </BrowserRouter>

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { getAuth, signOut ,createUserWithEmailAndPassword } from 'firebase/auth';
-import { Stack,TextField,FormControl,FormControlLabel,RadioGroup ,FormLabel,Radio, Button} from '@mui/material';
-import { doc, setDoc, getFirestore,addDoc } from 'firebase/firestore';
+import { Stack,TextField,FormControl,CircularProgress,FormControlLabel,RadioGroup ,FormLabel,Radio, Button} from '@mui/material';
+import { doc, setDoc, getFirestore } from 'firebase/firestore';
 import '../styles/signup.css'
 import { useNavigate } from 'react-router-dom';
-import { type } from 'os';
+import '../styles/login.css'
 export interface ISignUpProps {}
 
 
@@ -23,6 +23,17 @@ const SignUpPage : React.FunctionComponent<ISignUpProps> = (props) => {
     const handleChange = (e : any) => {
         setAccountType(e.target.value);
     };
+    async function identifyUser(type : string) {
+        if(type === "Teacher") {
+            navigate("/");
+        } 
+        else if (type === "Student") {
+            navigate("/student");
+        }
+        else {
+            navigate('/*');
+        }
+    };
     async function signUp(firstName: string , middleName : string ,lastname : string , type : string ,email: string ,password : string) {
       setAuthing(true);
       await createUserWithEmailAndPassword(auth, email, password)
@@ -38,20 +49,24 @@ const SignUpPage : React.FunctionComponent<ISignUpProps> = (props) => {
       });
    }
     async function saveUser(userId: string,firstName: string , middleName : string ,lastname : string , type : string ,email: string) {
-    try {
-        const docRef =await setDoc(doc(firestore, "Users", userId),{
+    setAuthing(true);
+        try {
+        
+        await setDoc(doc(firestore, "Users", userId),{
             firstName: firstName,
             middleName: middleName,
             lastName: lastname,
             type:type,
             email:email
         });
-        navigate('/login');
-        console.log("Document written with ID: ", docRef);
+        identifyUser(type)
     } catch(e) {
         console.error("Error adding document: ", e);
         }
+        setAuthing(false);
     };
+    
+ if (authing) return <div className='login-background'><CircularProgress/></div>
     return (
         <div className='sign-up-background'>
             <Stack spacing={2} sx={{width: 400}}>
