@@ -1,33 +1,47 @@
-import React from 'react';
-import { BrowserRouter,Routes ,Route} from 'react-router-dom';
-import { initializeApp } from 'firebase/app';
-import { config } from './config/config';
-import AuthRoute from './components/AuthRoute';
-import TeacherHomePage from './pages/teacher/TeacherHomePage';
-import StudentHomePage from './pages/students/StudentHomePage';
-import LoginPage from './pages/Login';
-import NotFound from './notfound/NotFound';
-import SignUpPage from './pages/SignUp';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AuthRoute from "./components/AuthRoute";
 
-initializeApp(config.firebaseConfig);
-export interface IApplicationProps{
+import LoginPage from "./pages/Login";
+import NotFound from "./notfound/NotFound";
+import SignUpPage from "./pages/SignUp";
 
-}
-const App : React.FunctionComponent<IApplicationProps> = (props) => {
+import MainPage from "./pages/Main";
+import TeacherHomePage from "./pages/TeacherHome";
+
+import AccountPage from "./pages/Account";
+
+export interface IApplicationProps {}
+const App: React.FunctionComponent<IApplicationProps> = (props) => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={
+        <Route
+          path="/classroom"
+          element={
             <AuthRoute>
-              <TeacherHomePage/>
-            </AuthRoute>}/>
-               <Route path='/student' element={
+              <TeacherHomePage />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
             <AuthRoute>
-              <StudentHomePage/>
-            </AuthRoute>}/>
-        <Route path='/signup' element={<SignUpPage/>}/>
-        <Route path='/*' element={<NotFound/>}/>
-        <Route path='/login' element={<LoginPage/>}/>
+              <AccountPage />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <AuthRoute>
+              <TeacherHomePage />
+            </AuthRoute>
+          }
+        />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/*" element={<NotFound />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   );
