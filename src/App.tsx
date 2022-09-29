@@ -5,7 +5,6 @@ import LoginPage from "./pages/Login";
 import NotFound from "./notfound/NotFound";
 import SignUpPage from "./pages/SignUp";
 
-import MainPage from "./pages/Main";
 import TeacherHomePage from "./pages/TeacherHome";
 
 import AccountPage from "./pages/Account";

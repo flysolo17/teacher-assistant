@@ -1,20 +1,11 @@
 import {
-  DeleteOutline,
-  Delete,
-  DeleteOutlineRounded,
-  EditOutlined,
-} from "@mui/icons-material";
-import {
-  Stack,
-  Paper,
-  Card,
-  CardHeader,
-  Avatar,
-  IconButton,
+  Button,
   CardContent,
   Typography,
   CardActions,
+  Card,
 } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 import { Classroom } from "../model/Classroom";
 interface ClassroomCardProps {
   classroom: Classroom;
@@ -23,21 +14,25 @@ interface ClassroomCardProps {
 const ClassroomCard: React.FunctionComponent<ClassroomCardProps> = (props) => {
   const { classroom } = props;
   return (
-    <Paper
-      elevation={2}
-      sx={{
-        width: 400,
-        padding: 1,
-        borderRadius: 5,
-        margin: "0 auto",
-        backgroundColor: "#E4E7EC",
-      }}
-    >
-      <Stack spacing={2}>
-        <h1>Section</h1>
-        <h3>{classroom.section}</h3>
-      </Stack>
-    </Paper>
+    <>
+      <Card sx={{ minWidth: 250, margin: 1 }}>
+        <CardContent>
+          <Typography variant={"h5"} color="text.secondary" gutterBottom>
+            {classroom.section}
+          </Typography>
+          <Typography sx={{ fontSize: 14 }} component="div">
+            {classroom.students.length} Students
+          </Typography>
+
+          <Typography sx={{ mb: 1.5 }} color="text.secondary"></Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small" startIcon={<Delete />} color="error">
+            Delete
+          </Button>
+        </CardActions>
+      </Card>
+    </>
   );
 };
 

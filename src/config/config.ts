@@ -3,13 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCw1aHMBMDC3GmBJTwFLdHyuFZXExBLxVQ",
-  authDomain: "final-project-7ad69.firebaseapp.com",
-  databaseURL: "https://final-project-7ad69.firebaseio.com",
-  projectId: "final-project-7ad69",
-  storageBucket: "final-project-7ad69.appspot.com",
-  messagingSenderId: "301540143091",
-  appId: "1:301540143091:web:57ee3d274e07f8af35ac86",
+  apiKey: "AIzaSyAL5E7SAZLHfGRV6u0HOhAwWZ5JJMIi-QU",
+  authDomain: "teacher-assistantv1.firebaseapp.com",
+  projectId: "teacher-assistantv1",
+  storageBucket: "teacher-assistantv1.appspot.com",
+  messagingSenderId: "144981786232",
+  appId: "1:144981786232:web:19e732d4ec1da633a2f78d",
 };
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

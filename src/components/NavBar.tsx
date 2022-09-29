@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { navData } from "./NavData";
 import { useNavigate } from "react-router-dom";
+import { Auth } from "firebase/auth";
 
 interface Props {
   children: any;
@@ -95,10 +96,10 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
         </AppBar>
 
         <Toolbar />
-        
+
         <Box component="main" sx={{ p: 3, width: "100%" }}>
           <Toolbar />
-          {children}
+          {(children)}
         </Box>
       </Box>
     </>
