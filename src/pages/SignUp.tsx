@@ -55,15 +55,7 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
       message: "",
     },
   });
-  async function identifyUser(type: string) {
-    if (type === "Teacher") {
-      navigate("/");
-    } else if (type === "Student") {
-      navigate("/student");
-    } else {
-      navigate("/*");
-    }
-  }
+
   async function signUp() {
     setAuthing(true);
     await createUserWithEmailAndPassword(auth, user.email, user.password)
@@ -77,6 +69,7 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
           lastName: user.lastname,
           type: user.type,
           email: user.email,
+          profile: "",
         };
         saveUser(newUser);
       })
@@ -98,7 +91,6 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
     setAuthing(true);
     try {
       await setDoc(doc(firestore, "Users", users.id), users);
-      identifyUser(users.type);
       setUser({
         ...user,
         alert: {
@@ -106,6 +98,7 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
           message: "Successfully created",
         },
       });
+      navigate("/");
     } catch (error) {
       console.error("Error adding document: ", error);
     }

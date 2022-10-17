@@ -2,12 +2,13 @@ import { doc, QueryDocumentSnapshot } from "firebase/firestore";
 import { Users } from "./User";
 
 export interface Classroom {
-  teacher: string;
-  section: string;
-  createdAt: number;
+  className: string;
+  createdAt: Date;
+  color: string;
   students: Array<string>;
-  modules: Array<string>;
+  lessons: Array<string>;
   announcements: Array<string>;
+  teacher: string;
 }
 export const classroomConveter = {
   toFirestore: (data: Classroom) => data,
