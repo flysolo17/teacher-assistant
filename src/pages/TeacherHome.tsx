@@ -1,6 +1,13 @@
 import { Alert, Grid, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  Query,
+  query,
+  where,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ClassCard from "../components/ClassCard";
 import CreateClassDialog from "../components/CreateClass";
@@ -14,8 +21,9 @@ interface TeacherHomePageProps {}
 const TeacherHomePage: React.FunctionComponent<TeacherHomePageProps> = () => {
   const { currentUser } = useAuth();
   const [classroom, setClassroom] = useState<any[]>([]);
-  
+
   const navigate = useNavigate();
+
   useEffect(() => {
     if (currentUser != null) {
       const reference = collection(firestore, "Classroom");

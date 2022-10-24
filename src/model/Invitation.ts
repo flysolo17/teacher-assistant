@@ -4,7 +4,7 @@ export interface Invitation {
   accepted: boolean;
   classID: string;
   studentID: string;
-  date: Date;
+  date: number;
 }
 
 export const userConverter = {

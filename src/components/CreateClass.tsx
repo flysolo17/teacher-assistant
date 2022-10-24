@@ -75,11 +75,9 @@ const CreateClassDialog: React.FunctionComponent<ICreateDialogProps> = (
   const saveClassroom = async () => {
     await addDoc(collection(firestore, "Classroom"), {
       className: title,
-      createdAt: new Date(),
+      createdAt: new Date().getTime() / 1000,
       color: selectedColor,
       students: [],
-      lessons: [],
-      announcements: [],
       teacher: userId,
     });
     console.log("Added!");

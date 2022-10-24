@@ -11,3 +11,8 @@ export const colorPicker: string[] = [
 ];
 
 export const PROFILE_PATH = "profile"
+export const LESSONS_PATH = "lessons";
+
+export function downloadPdf(url: string) {
+  
+}

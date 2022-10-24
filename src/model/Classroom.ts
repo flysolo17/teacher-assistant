@@ -3,11 +3,9 @@ import { Users } from "./User";
 
 export interface Classroom {
   className: string;
-  createdAt: Date;
+  createdAt: number;
   color: string;
   students: Array<string>;
-  lessons: Array<string>;
-  announcements: Array<string>;
   teacher: string;
 }
 export const classroomConveter = {
