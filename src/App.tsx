@@ -48,7 +48,6 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
           />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/*" element={<NotFound />} />
-
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </AuthProvider>

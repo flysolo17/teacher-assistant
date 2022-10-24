@@ -56,7 +56,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
       .then((userCredential) => {
         setAuthing(false);
         const user = userCredential.user;
-        identifyUser(user.uid);
+        navigate("/");
         setOpen({ open: true, message: "User Signed in!" });
       })
       .catch((error) => {
