@@ -1,3 +1,4 @@
+import { Container } from "@mui/material";
 import { getAuth, signOut } from "firebase/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,17 +10,9 @@ const StudentHomePage: React.FunctionComponent<IStudentHomePageProps> = (
   const auth = getAuth();
   const navigate = useNavigate();
   return (
-    <>
-      <h1>Student {auth.currentUser?.displayName}</h1>
-      <button
-        onClick={() => {
-          signOut(auth);
-          navigate("/login");
-        }}
-      >
-        Logout
-      </button>
-    </>
+    <Container
+      sx={{ width: "100%", height: "100vh", backgroundColor: "black" }}
+    ></Container>
   );
 };
 

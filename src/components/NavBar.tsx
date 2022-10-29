@@ -1,13 +1,22 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
+import Drawer from "@mui/material/Drawer";
+import CssBaseline from "@mui/material/CssBaseline";
+import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { navData } from "./NavData";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
+import { navData } from "./NavData";
+const drawerWidth = 300;
 
 interface Props {
   children: any;
@@ -21,81 +30,59 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
     setMobileOpen(!mobileOpen);
   };
   return (
-    <>
-      <Box sx={{ display: "flex" }}>
-        <AppBar component="nav">
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
+    <Box
+      sx={{
+        display: "flex",
+      }}
+    >
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+      ></AppBar>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+        variant="permanent"
+        anchor="left"
+      >
+        <Divider />
+        <Stack>
+          <Typography variant={"h5"} component={"h1"} padding={5}>
+            Teacher Assistant
+          </Typography>
+          <Divider />
+        </Stack>
+        <List>
+          {navData.map((item) => (
+            <ListItem
+              key={item.title}
+              onClick={() => navigate(item.path)}
+              disablePadding
             >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-            >
-              TEACHER ASSISTANT
-            </Typography>
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              {navData.map((item) => (
-                <Button
-                  key={item.title}
-                  sx={{ color: "#fff" }}
-                  onClick={() => navigate(item.path)}
-                >
-                  {item.title}
-                </Button>
-              ))}
-            </Box>
-          </Toolbar>
-          <Box sx={{ display: "flex" }}>
-            <AppBar component="nav">
-              <Toolbar>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={handleDrawerToggle}
-                  sx={{ mr: 2, display: { sm: "none" } }}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-                >
-                  TEACHER ASSISTANT
-                </Typography>
-                <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                  {navData.map((item) => (
-                    <Button
-                      key={item.title}
-                      sx={{ color: "#fff" }}
-                      onClick={() => navigate(item.path)}
-                    >
-                      {item.title}
-                    </Button>
-                  ))}
-                </Box>
-              </Toolbar>
-            </AppBar>
-          </Box>
-        </AppBar>
-
-        <Toolbar />
-
-        <Box component="main" sx={{ p: 3, width: "100%" }}>
-          <Toolbar />
-          {(children)}
-        </Box>
+              <ListItemButton>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+        }}
+      >
+        {children}
       </Box>
-    </>
+    </Box>
   );
 };
 export default NavigationBar;

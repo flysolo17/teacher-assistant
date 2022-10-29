@@ -7,7 +7,7 @@ export interface Invitation {
   date: number;
 }
 
-export const userConverter = {
+export const invitationConverter = {
   toFirestore: (data: Invitation) => data,
   fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as Invitation,
 };

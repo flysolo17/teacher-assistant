@@ -7,7 +7,7 @@ export interface Users {
   lastName: string;
   type: string;
   email: string;
-  profile: string;
+  profile: string[];
 }
 
 export const userConverter = {

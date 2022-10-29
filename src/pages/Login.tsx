@@ -14,6 +14,8 @@ import {
   Button,
   InputAdornment,
   LinearProgress,
+  Container,
+  CircularProgress,
 } from "@mui/material";
 import { Email, Password } from "@mui/icons-material";
 import KeyIcon from "@mui/icons-material/Key";
@@ -23,50 +25,26 @@ import "../styles/login.css";
 import AlertPage from "../alerts/Alert";
 import { Stack } from "@mui/system";
 import { auth } from "../config/config";
+import { useAuth } from "../context/AuthContext";
 export interface ILoginPageProps {}
 
 const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
-  const firestore = getFirestore();
+  const { login, loading } = useAuth();
   const navigate = useNavigate();
-  const [authing, setAuthing] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [open, setOpen] = useState({
-    open: false,
-    message: "",
-  });
-  async function identifyUser(userId: string) {
-    const docRef = doc(firestore, "Users", userId).withConverter(userConverter);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const user = docSnap.data();
-      if (user.type === "Teacher") {
-        navigate("/");
-      } else if (user.type === "Student") {
-        navigate("/student");
-      }
-    } else {
-      navigate("/*");
-    }
-  }
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    login(email, password);
+    navigate("/");
+  };
 
-  async function signIn(email: string, password: string) {
-    setAuthing(true);
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        setAuthing(false);
-        const user = userCredential.user;
-        navigate("/");
-        setOpen({ open: true, message: "User Signed in!" });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode + " " + errorMessage);
-        setAuthing(false);
-        setOpen({ open: true, message: errorCode + " " + errorMessage });
-      });
-  }
+  if (loading)
+    return (
+      <Container sx={{ width: "100%", height: "100vh" }}>
+        <CircularProgress />
+      </Container>
+    );
   return (
     <>
       <div className="content">
@@ -116,7 +94,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
               fullWidth
               disableElevation
               startIcon={<SendIcon />}
-              onClick={() => signIn(email, password)}
+              onClick={handleSubmit}
             >
               Sign In
             </Button>
@@ -142,11 +120,8 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
               Create Account
             </Button>
           </Stack>
-          {authing && <LinearProgress />}
         </Box>
       </div>
-
-      <AlertPage message={open.message} open={open.open} />
     </>
   );
 };

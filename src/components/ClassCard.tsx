@@ -5,26 +5,52 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Classroom } from "../model/Classroom";
-import { Grid } from "@mui/material";
+import { Container, Grid } from "@mui/material";
+import CardMedia from "@mui/material/CardMedia";
+
+import { CardActionArea } from "@mui/material";
+import { getColor, getImage } from "../utils/Constants";
 interface ClassCardProps {
   classroom: Classroom;
-  onClick : () => void
+  onClick: () => void;
 }
 
 const ClassCard: React.FunctionComponent<ClassCardProps> = (props) => {
-  const { classroom ,onClick} = props;
+  const { classroom, onClick } = props;
+  function formatTimestamp(timestamp: number) {
+    const current_datetime = new Date(timestamp);
+    return current_datetime.toLocaleString();
+  }
   return (
-    <Grid item xs={2} sm={4} md={4} onClick={onClick}>
-      <Card sx={{ display: "flex", backgroundColor: classroom.color }}>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <CardContent sx={{ flex: "1 0 auto" }}>
-            <Typography component="div" variant="h6">
-              {classroom.className}
-            </Typography>
-          </CardContent>
-        </Box>
-      </Card>
-    </Grid>
+    <Container onClick={onClick} sx={{ borderRadius: 10 }}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height={"190"}
+          image={getImage(classroom.color)}
+          sx={{ borderRadius: 2 }}
+          alt="green iguana"
+        />
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              color: "black",
+            }}
+          >
+            {classroom.className}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {formatTimestamp(classroom.createdAt)}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Container>
   );
 };
 

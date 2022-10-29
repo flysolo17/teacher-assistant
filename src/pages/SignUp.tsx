@@ -21,99 +21,33 @@ import "../styles/signup.css";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import { Users } from "../model/User";
-import AlertPage from "../alerts/Alert";
-import { padding } from "@mui/system";
 import "../styles/signup.css";
+import { useAuth } from "../context/AuthContext";
 export interface ISignUpProps {}
 
-interface TUser {
-  firstname: string;
-  middleName: string;
-  lastname: string;
-  type: string;
-  email: string;
-  password: string;
-  alert: {
-    open: boolean;
-    message: string;
-  };
-}
+interface TUser {}
 const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
-  const auth = getAuth();
-  const firestore = getFirestore();
+
   const navigate = useNavigate();
-  const [authing, setAuthing] = useState(false);
-  const [user, setUser] = useState<TUser>({
-    firstname: "",
+  const { signup, loading } = useAuth();
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<Users>({
+    id: "",
+    firstName: "",
     middleName: "",
-    lastname: "",
-    type: "Teacher",
+    lastName: "",
+    type: "",
     email: "",
-    password: "",
-    alert: {
-      open: false,
-      message: "",
-    },
+    profile: [],
   });
 
-  async function signUp() {
-    setAuthing(true);
-    await createUserWithEmailAndPassword(auth, user.email, user.password)
-      .then((userCredential) => {
-        setAuthing(false);
-        const currenUser = userCredential.user;
-        let newUser: Users = {
-          id: currenUser.uid,
-          firstName: user.firstname,
-          middleName: user.middleName,
-          lastName: user.lastname,
-          type: user.type,
-          email: user.email,
-          profile: "",
-        };
-        saveUser(newUser);
-      })
-      .catch((error) => {
-        setAuthing(false);
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setUser({
-          ...user,
-          alert: {
-            open: true,
-            message: errorCode + " " + errorMessage,
-          },
-        });
-      });
-    setAuthing(false);
-  }
-  async function saveUser(users: Users) {
-    setAuthing(true);
-    try {
-      await setDoc(doc(firestore, "Users", users.id), users);
-      setUser({
-        ...user,
-        alert: {
-          open: true,
-          message: "Successfully created",
-        },
-      });
-      navigate("/");
-    } catch (error) {
-      console.error("Error adding document: ", error);
-    }
+  const handdleSubmit = (event: any) => {
+    event.preventDefault();
+    signup(user.email, password, user);
+    navigate("/");
+  };
 
-    setAuthing(false);
-    setUser({
-      ...user,
-      alert: {
-        open: true,
-        message: "Error adding document..",
-      },
-    });
-  }
-
-  if (authing)
+  if (loading)
     return (
       <div className="login-background">
         <CircularProgress />
@@ -139,8 +73,8 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
         <TextField
           fullWidth
           id="demo-helper-text-aligned"
-          value={user.firstname}
-          onChange={(e) => setUser({ ...user, firstname: e.target.value })}
+          value={user.firstName}
+          onChange={(e) => setUser({ ...user, firstName: e.target.value })}
           label="Firstname"
         />
         <TextField
@@ -153,8 +87,8 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
         <TextField
           fullWidth
           id="demo-helper-text-aligned"
-          value={user.lastname}
-          onChange={(e) => setUser({ ...user, lastname: e.target.value })}
+          value={user.lastName}
+          onChange={(e) => setUser({ ...user, lastName: e.target.value })}
           label="Lastname"
         />
         <FormControl>
@@ -194,8 +128,8 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
           helperText=" "
           id="demo-helper-text-aligned-no-helper"
           label="Password"
-          value={user.password}
-          onChange={(e) => setUser({ ...user, password: e.target.value })}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           type={"password"}
         />
         <Button
@@ -204,7 +138,7 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
           color="success"
           size="large"
           disableElevation
-          onClick={() => signUp()}
+          onClick={handdleSubmit}
         >
           Sign Up
         </Button>
@@ -212,7 +146,6 @@ const SignUpPage: React.FunctionComponent<ISignUpProps> = (props) => {
           Already Have an Account? Sign In
         </Button>
       </Stack>
-      <AlertPage message={user.alert.message} open={user.alert.open} />
     </Box>
   );
 };

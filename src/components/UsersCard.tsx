@@ -10,27 +10,26 @@ import { Button } from "@mui/material";
 import { Stack } from "@mui/system";
 import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { firestore } from "../config/config";
-import { async } from "@firebase/util";
+
+import { Invitation } from "../model/Invitation";
 
 export interface IUsersCardProps {
   user: Users;
   classID: string;
   isInvited: boolean;
+  inviteID: string;
 }
 const UsersCard: React.FunctionComponent<IUsersCardProps> = (props) => {
-  const { user, classID, isInvited } = props;
+  const { user, classID, isInvited, inviteID } = props;
   const fullName = user.firstName + " " + user.middleName + " " + user.lastName;
   async function inviteStudent() {
     try {
-      await setDoc(
-        doc(firestore, "Classroom", classID, "Invitations", user.id),
-        {
-          accepted: false,
-          classID: classID,
-          studentID: user.id,
-          date: new Date().getTime() / 1000,
-        }
-      );
+      await addDoc(collection(firestore, "Invitations"), {
+        accepted: false,
+        classID: classID,
+        studentID: user.id,
+        date: new Date().getTime() / 1000,
+      });
       console.log("successfully invited: ");
     } catch (error) {
       console.error("Error inviting document: ", error);
@@ -38,9 +37,7 @@ const UsersCard: React.FunctionComponent<IUsersCardProps> = (props) => {
   }
   async function cancelInvite() {
     try {
-      await deleteDoc(
-        doc(firestore, "Classroom", classID, "Invitations", user.id)
-      );
+      await deleteDoc(doc(firestore, "Invitations", inviteID));
       console.log("invitation cancelled: ");
     } catch (error) {
       console.error("Error canceling invite: ", error);
@@ -52,7 +49,7 @@ const UsersCard: React.FunctionComponent<IUsersCardProps> = (props) => {
       <Stack direction={"row"} spacing={2} margin={1}>
         <Avatar
           alt="Profile"
-          src={user.profile}
+          src={user.profile[user.profile.length - 1]}
           sx={{ width: 40, height: 40 }}
         />
         <Stack direction={"column"} sx={{ width: "100%" }}>

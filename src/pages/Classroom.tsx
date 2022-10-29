@@ -1,5 +1,8 @@
 import {
+  Alert,
+  AlertTitle,
   Button,
+  Collapse,
   Divider,
   Fab,
   Grid,
@@ -32,6 +35,8 @@ import { v4 as uuidV4 } from "uuid";
 import ConFirmLesson from "../alerts/ConfirmLesson";
 import { Lesson } from "../model/Lesson";
 import LessonsCard from "../components/LessonsCard";
+import CloseIcon from "@mui/icons-material/Close";
+
 interface ClassroomPageProps {}
 
 const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
@@ -43,6 +48,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [lesson, setLesson] = useState<any[]>([]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -69,7 +75,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
 
   useEffect(() => {
     const q = query(
-      collection(firestore, "Classroom", id!, "Invitations"),
+      collection(firestore, "Invitations"),
       where("classID", "==", id!)
     );
     const unsub = onSnapshot(q, (querySnapshot) => {
@@ -80,8 +86,28 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
       console.log("rendered: invites");
       setInvitation(data);
     });
+
     return () => unsub();
   }, []);
+
+  function identifyIfInvited(userID: string): boolean {
+    let invited = false;
+    invitation.map((invitation) => {
+      if (invitation.studentID == userID) {
+        invited = true;
+      }
+    });
+    return invited;
+  }
+  function getInvitionID(userID: string, classroomID: string): string {
+    let id = "";
+    invitation.map((invitation) => {
+      if (invitation.studentID == userID && invitation.classID == classroomID) {
+        id = invitation.id;
+      }
+    });
+    return id;
+  }
 
   useEffect(() => {
     const q = query(
@@ -99,22 +125,15 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
     return () => unsub();
   }, []);
 
-  function isInvited(userID: string): boolean {
-    let invited = false;
-    invitation.forEach((invitation) => {
-      if (invitation.studentID == userID) {
-        invited = true;
-      }
-    });
-    return invited;
-  }
-
   const handdleOnChange = (e: any) => {
     const file = e.target.files[0];
-    setPickedFile(file);
-    setOpen(true);
+    if (file.size < 5000000) {
+      setPickedFile(file);
+      setOpen(true);
+    } else {
+      console.error("Invalid");
+    }
   };
-
 
   //get lessons
   useEffect(() => {
@@ -172,7 +191,8 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                   <UsersCard
                     user={user}
                     classID={id!}
-                    isInvited={isInvited(user.id)}
+                    isInvited={identifyIfInvited(user.id)}
+                    inviteID={getInvitionID(user.id, id!)}
                   />
                 )}
               </li>
@@ -207,7 +227,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                   Upload
                   <input
                     hidden
-                    accept="application/pdf"
+                    accept="application/pdf application/msword"
                     type="file"
                     onChange={handdleOnChange}
                   />

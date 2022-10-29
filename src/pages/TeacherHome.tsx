@@ -1,4 +1,4 @@
-import { Alert, Grid, Typography } from "@mui/material";
+import { Alert, Divider, Grid, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import {
   collection,
@@ -15,6 +15,7 @@ import { firestore } from "../config/config";
 import { useAuth } from "../context/AuthContext";
 import teaching from "../images/teaching.png";
 import { useNavigate } from "react-router-dom";
+import { getColor, getImage } from "../utils/Constants";
 
 interface TeacherHomePageProps {}
 
@@ -52,19 +53,21 @@ const TeacherHomePage: React.FunctionComponent<TeacherHomePageProps> = () => {
             <CreateClassDialog userId={currentUser?.uid} />
           )}
         </div>
-
+        <Divider sx={{ marginBottom: 5 }} />
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
+          columns={{ xs: 4, sm: 8, md: 16 }}
         >
           {classroom.length > 0 ? (
             classroom.map((row) => (
-              <ClassCard
-                key={row.id}
-                classroom={row}
-                onClick={() => navigate("/classroom/" + row.id)}
-              />
+              <Grid item xs={2} sm={4} md={4}>
+                <ClassCard
+                  key={row.id}
+                  classroom={row}
+                  onClick={() => navigate("/classroom/" + row.id)}
+                />
+              </Grid>
             ))
           ) : (
             <Stack sx={{ margin: "auto" }}>

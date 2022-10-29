@@ -6,14 +6,15 @@ import { userConverter, Users } from "../model/User";
 import { useNavigate } from "react-router-dom";
 import TeacherHomePage from "./TeacherHome";
 import StudentHomePage from "./StudentHomePage";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Container } from "@mui/material";
 interface MainPageProps {}
 
 const MainPage: React.FunctionComponent<MainPageProps> = (props) => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const { currentUser } = useAuth();
-  const [user, setUser] = useState<Users>();
+
+
+  const { currentUser, loading } = useAuth();
+  const [user, setUser] = useState<Users | null>(null);
+
   async function getAccount() {
     const docRef = doc(firestore, "Users", currentUser?.uid!).withConverter(
       userConverter
@@ -24,12 +25,36 @@ const MainPage: React.FunctionComponent<MainPageProps> = (props) => {
     }
   }
   useEffect(() => {
-    getAccount();
-  }, [user]);
+    if (currentUser != null) {
+      getAccount();
+    }
+  }, [currentUser]);
 
-  if (loading) return <CircularProgress />;
+  if (loading) {
+    return (
+      <>
+        <Container
+          sx={{
+            width: "100%",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Container>
+      </>
+    );
+  }
   return (
-    <>{user?.type == "Teacher" ? <TeacherHomePage /> : <StudentHomePage />}</>
+    <>
+   
+        {!loading &&
+          user != null &&
+          (user.type == "Teacher" ? <TeacherHomePage /> : <StudentHomePage />)}
+
+    </>
   );
 };
 

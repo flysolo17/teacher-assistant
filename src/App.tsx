@@ -11,12 +11,20 @@ import AccountPage from "./pages/Account";
 import { AuthProvider } from "./context/AuthContext";
 import MainPage from "./pages/Main";
 import ClassroomPage from "./pages/Classroom";
-
+import EditProfilePage from "./pages/EditProfile";
+import { useAuth } from "./context/AuthContext";
+import { useEffect, useState } from "react";
+import { userConverter, Users } from "./model/User";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, firestore } from "./config/config";
+import { User } from "firebase/auth";
 export interface IApplicationProps {}
 const App: React.FunctionComponent<IApplicationProps> = (props) => {
+  const currentUser: User | null = auth.currentUser;
+
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <AuthProvider current={currentUser}>
         <Routes>
           <Route path="/classroom">
             <Route
@@ -43,6 +51,14 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
             element={
               <AuthRoute>
                 <MainPage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/profile/edit/:id"
+            element={
+              <AuthRoute>
+                <EditProfilePage />
               </AuthRoute>
             }
           />
