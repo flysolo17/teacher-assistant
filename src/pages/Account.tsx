@@ -6,6 +6,7 @@ import {
   Container,
   Divider,
   Grid,
+  IconButton,
   Paper,
   Stack,
   Typography,
@@ -20,7 +21,7 @@ import { useAuth } from "../context/AuthContext";
 import { experimentalStyled as styled } from "@mui/material/styles";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { PROFILE_PATH } from "../utils/Constants";
-
+import LogoutIcon from "@mui/icons-material/Logout";
 interface AccountPageProps {}
 
 const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
@@ -28,7 +29,7 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
 
   const [users, setUser] = useState<Users | null>(null);
   const navigate = useNavigate();
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+
 
   const fullname =
     users?.firstName + " " + users?.middleName + " " + users?.lastName;
@@ -46,7 +47,7 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
     if (currentUser != null) {
       getAccount();
     }
-  }, [currentUser]);
+  }, []);
 
   if (loading) {
     return (
@@ -66,71 +67,84 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
     );
   }
   return (
-    <Stack
-      sx={{
-        width: "100%",
-        padding: 5,
-        margin: 3,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      direction={"column"}
-      spacing={1}
-    >
-      <Avatar
-        src={users?.profile[users.profile.length - 1]}
-        alt="profile"
-        sx={{ width: 150, height: 150 }}
-      />
-      <Typography
-        variant="h4"
-        component="div"
-        sx={{ display: "inline-block" }}
-        color={"black"}
-      >
-        {fullname}
-      </Typography>
+    <>
+      <div className="account-main">
+        <div className="account-profile">
+          <Avatar
+            sx={{ width: 180, height: 180 }}
+            src={users?.profile[users.profile.length - 1]}
+            alt={"profile"}
+          />
+          <div className="account-info">
+            <Stack
+              direction={"row"}
+              sx={{ display: "flex", alignItems: "center" }}
+              spacing={2}
+            >
+              <p className="name">{fullname}</p>
+              <Button
+                variant={"outlined"}
+                sx={{
+                  width: 150,
+                  height: 30,
+                  color: "black",
 
-      <Typography fontSize={24}>{users?.email}</Typography>
+                  borderColor: "black",
+                  "&:hover": {
+                    backgroundColor: "#0069d9",
+                    borderColor: "#0062cc",
+                    boxShadow: "none",
+                    color: "white",
+                  },
+                }}
+                size="small"
+                onClick={() => navigate("/profile/edit/" + currentUser?.uid!)}
+              >
+                Edit
+              </Button>
+              <IconButton
+                aria-label="logout"
+                sx={{ color: "black" }}
+                onClick={logout}
+              >
+                <LogoutIcon />
+              </IconButton>
+            </Stack>
 
-      <Stack direction={"row"} spacing={2} sx={{ margin: 2 }}>
-        <Button
-          variant={"outlined"}
-          size={"small"}
-          sx={{ width: 300 }}
-          onClick={() => navigate("/profile/edit/" + currentUser?.uid!)}
+            <Stack direction={"column"} sx={{ marginY: 2 }}>
+              <p className="email">{users?.email}</p>
+              <p className="type">{users?.type}</p>
+            </Stack>
+          </div>
+        </div>
+        <Stack
+          direction={"column"}
+          sx={{ marginTop: 2, width: "60%" }}
+          spacing={2}
         >
-          Edit Profile
-        </Button>
-        <Button
-          variant={"outlined"}
-          sx={{ width: 300 }}
-          size={"small"}
-          onClick={logout}
-        >
-          Logout
-        </Button>
-      </Stack>
-
-      <Box sx={{ width: "60%", height: 200 }}>
-        .<Typography variant={"h5"}>Your Profiles</Typography>
-        <Divider sx={{ marginY: 2, backgroundColor: "black" }} />
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-        >
-          {users?.profile.map((url) => {
-            return (
-              <Grid item xs={2} sm={4} md={4}>
-                <img src={url} loading="lazy" height={300} width={300} />
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Box>
-    </Stack>
+          <Typography
+            variant={"h5"}
+            sx={{ fontWeight: 300, fontFamily: "poppins" }}
+          >
+            Your Images
+          </Typography>
+          <Divider sx={{ marginY: 2, backgroundColor: "black" }} />
+          <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}
+          >
+            {users?.profile.map((url) => {
+              return (
+                <Grid item xs={2} sm={4} md={4}>
+                  <img src={url} loading="lazy" height={300} width={300} />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </Stack>
+      </div>
+    </>
   );
 };
 

@@ -12,7 +12,13 @@ import { storage, firestore } from "../config/config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { LESSONS_PATH } from "../utils/Constants";
 import { v4 as uuidV4 } from "uuid";
-import { addDoc, collection, doc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { Stack } from "@mui/system";
 interface ConFirmLessonProps {
   open: boolean;
@@ -27,7 +33,7 @@ const ConFirmLesson: React.FunctionComponent<ConFirmLessonProps> = (props) => {
 
   function uploadFile() {
     if (file == null) return;
-    const fileref = ref(storage, `${LESSONS_PATH}/${uuidV4()}`);
+    const fileref = ref(storage, `${LESSONS_PATH}/${classroomID}/${uuidV4()}`);
     uploadBytes(fileref, file)
       .then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
@@ -49,13 +55,15 @@ const ConFirmLesson: React.FunctionComponent<ConFirmLessonProps> = (props) => {
   }
   async function createLesson(lesson: Lesson) {
     try {
-      const docRef = await addDoc(collection(firestore, "Lessons"), lesson);
-      console.log("Document written with ID: ", docRef.id);
+      const ref = doc(firestore, "Classroom", classroomID);
+      await updateDoc(ref, {
+        lessons: arrayUnion(lesson),
+      });
+      console.log("Document written with ID: ", ref.id);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   }
-
   return (
     <>
       <Dialog

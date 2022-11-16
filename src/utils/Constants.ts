@@ -6,6 +6,12 @@ import class5 from "../images/class05.jpg";
 import class6 from "../images/class06.jpg";
 import class7 from "../images/class07.jpg";
 import class8 from "../images/class09.jpg";
+import PNG from "../images/png.png";
+import PDF from "../images/pdf.png";
+import MP4 from "../images/mp4.png";
+import FILE from "../images/file.png";
+import JPG from "../images/jpg.png";
+import DOC from "../images/doc.png";
 export const colorPicker: string[] = [
   "#C7C6FA",
   "#97F8C0",
@@ -53,11 +59,60 @@ export function getImage(color: string): string {
   }
   return img;
 }
-
-export function getColor(): string {
-  return class1;
+export function getFileType(file: string): string {
+  let type = FILE;
+  switch (file) {
+    case "image/png":
+      type = PNG;
+      break;
+    case "image/jpeg":
+      type = JPG;
+      break;
+    case "application/pdf":
+      type = PDF;
+      break;
+    case "video/mp4":
+      type = MP4;
+      break;
+    case "application/docx" || "application/doc":
+      type = DOC;
+      break;
+    default:
+      type = FILE;
+      break;
+  }
+  return type;
 }
+export function getFileColor(file: string): string {
+  let type = class1;
+  switch (file) {
+    case "image/png":
+      type = class2;
+      break;
+    case "image/jpeg":
+      type = class3;
+      break;
+    case "application/pdf":
+      type = class4;
+      break;
+    case "video/mp4":
+      type = class5;
+      break;
+    case "application/doc":
+      type = class6;
+      break;
+    default:
+      type = class7;
+      break;
+  }
+  return type;
+}
+
 export const PROFILE_PATH = "profile";
 export const LESSONS_PATH = "lessons";
 
 export function downloadPdf(url: string) {}
+export function formatTimestamp(timestamp: number) {
+  const current_datetime = new Date(timestamp);
+  return current_datetime.toLocaleString();
+}

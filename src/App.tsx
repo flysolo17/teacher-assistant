@@ -18,6 +18,8 @@ import { userConverter, Users } from "./model/User";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, firestore } from "./config/config";
 import { User } from "firebase/auth";
+import StudentClassroomPage from "./pages/StudentClassroom";
+import OverviewPage from "./pages/Overview";
 export interface IApplicationProps {}
 const App: React.FunctionComponent<IApplicationProps> = (props) => {
   const currentUser: User | null = auth.currentUser;
@@ -36,6 +38,7 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
               }
             />
             <Route path=":id" element={<ClassroomPage />} />
+            <Route path="student/:id" element={<StudentClassroomPage />} />
           </Route>
 
           <Route
@@ -51,6 +54,14 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
             element={
               <AuthRoute>
                 <MainPage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/overview"
+            element={
+              <AuthRoute>
+                <OverviewPage />
               </AuthRoute>
             }
           />

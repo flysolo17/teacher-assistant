@@ -16,18 +16,22 @@ import { Invitation } from "../model/Invitation";
 export interface IUsersCardProps {
   user: Users;
   classID: string;
+  className: string;
   isInvited: boolean;
   inviteID: string;
+  teacherID: string;
 }
 const UsersCard: React.FunctionComponent<IUsersCardProps> = (props) => {
-  const { user, classID, isInvited, inviteID } = props;
+  const { user, classID, isInvited, inviteID,teacherID ,className} = props;
   const fullName = user.firstName + " " + user.middleName + " " + user.lastName;
   async function inviteStudent() {
     try {
       await addDoc(collection(firestore, "Invitations"), {
         accepted: false,
         classID: classID,
+        className: className,
         studentID: user.id,
+        teacher: teacherID,
         date: new Date().getTime() / 1000,
       });
       console.log("successfully invited: ");

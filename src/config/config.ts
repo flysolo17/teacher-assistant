@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAL5E7SAZLHfGRV6u0HOhAwWZ5JJMIi-QU",
-  authDomain: "teacher-assistantv1.firebaseapp.com",
-  projectId: "teacher-assistantv1",
-  storageBucket: "teacher-assistantv1.appspot.com",
-  messagingSenderId: "144981786232",
-  appId: "1:144981786232:web:19e732d4ec1da633a2f78d",
+  apiKey: "AIzaSyCPHnty6mo5BRzKH_OwXb7u-D_cB_FsKw4",
+  authDomain: "teacher-assistant-787c8.firebaseapp.com",
+  projectId: "teacher-assistant-787c8",
+  storageBucket: "teacher-assistant-787c8.appspot.com",
+  messagingSenderId: "178685498437",
+  appId: "1:178685498437:web:a5e4df978c13f47a853f2c",
 };
 
 const app = initializeApp(firebaseConfig);

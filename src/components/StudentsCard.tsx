@@ -27,7 +27,7 @@ const StudentsCard: React.FunctionComponent<IStudentsCardProps> = (props) => {
         <Stack direction={"row"} spacing={2} margin={1}>
           <Avatar
             alt="Profile"
-            src={user.profile[0]}
+            src={user.profile[user.profile.length - 1]}
             sx={{ width: 50, height: 50 }}
           />
           <Stack direction={"column"} sx={{ width: "100%" }}>

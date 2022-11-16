@@ -15,7 +15,7 @@ import { firestore } from "../config/config";
 import { useAuth } from "../context/AuthContext";
 import teaching from "../images/teaching.png";
 import { useNavigate } from "react-router-dom";
-import { getColor, getImage } from "../utils/Constants";
+import {  getImage } from "../utils/Constants";
 
 interface TeacherHomePageProps {}
 
@@ -30,7 +30,8 @@ const TeacherHomePage: React.FunctionComponent<TeacherHomePageProps> = () => {
       const reference = collection(firestore, "Classroom");
       const classroomQuery = query(
         reference,
-        where("teacher", "==", currentUser.uid)
+        where("teacher", "==", currentUser.uid),
+        orderBy("createdAt", "desc")
       );
       const unsubscribe = onSnapshot(classroomQuery, (snapshot) => {
         let data: any[] = [];
@@ -48,36 +49,50 @@ const TeacherHomePage: React.FunctionComponent<TeacherHomePageProps> = () => {
     <>
       <div className="teacher-homepage">
         <div className="header">
-          <Typography variant="h5">My Classes</Typography>
+          <p className="name">My Classes</p>
+        </div>
+
+        <Divider />
+        <Stack
+          sx={{
+            width: "100%",
+            display: "flex-end",
+            justifyContent: "end",
+            alignItems: "end",
+          }}
+        >
           {currentUser != null && (
             <CreateClassDialog userId={currentUser?.uid} />
           )}
-        </div>
-        <Divider sx={{ marginBottom: 5 }} />
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 16 }}
-        >
-          {classroom.length > 0 ? (
-            classroom.map((row) => (
-              <Grid item xs={2} sm={4} md={4}>
-                <ClassCard
-                  key={row.id}
-                  classroom={row}
-                  onClick={() => navigate("/classroom/" + row.id)}
-                />
-              </Grid>
-            ))
-          ) : (
-            <Stack sx={{ margin: "auto" }}>
-              <img src={teaching} alt="teaching" />
-              <Typography component="div" variant="h6" sx={{ margin: "auto" }}>
-                No Classrooms yet!
-              </Typography>
-            </Stack>
-          )}
-        </Grid>
+          <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 16 }}
+          >
+            {classroom.length > 0 ? (
+              classroom.map((row) => (
+                <Grid item xs={2} sm={4} md={4}>
+                  <ClassCard
+                    key={row.id}
+                    classroom={row}
+                    onClick={() => navigate("/classroom/" + row.id)}
+                  />
+                </Grid>
+              ))
+            ) : (
+              <Stack sx={{ margin: "auto" }}>
+                <img src={teaching} alt="teaching" />
+                <Typography
+                  component="div"
+                  variant="h6"
+                  sx={{ margin: "auto" }}
+                >
+                  No Classrooms yet!
+                </Typography>
+              </Stack>
+            )}
+          </Grid>
+        </Stack>
       </div>
     </>
   );

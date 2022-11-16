@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertTitle,
+  Box,
   Button,
   Collapse,
   Divider,
@@ -36,6 +37,7 @@ import ConFirmLesson from "../alerts/ConfirmLesson";
 import { Lesson } from "../model/Lesson";
 import LessonsCard from "../components/LessonsCard";
 import CloseIcon from "@mui/icons-material/Close";
+import { useAuth } from "../context/AuthContext";
 
 interface ClassroomPageProps {}
 
@@ -47,8 +49,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
   const [pickedFile, setPickedFile] = useState(null);
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const [lesson, setLesson] = useState<any[]>([]);
-
+  const { currentUser } = useAuth();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -135,23 +136,6 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
     }
   };
 
-  //get lessons
-  useEffect(() => {
-    const q = query(
-      collection(firestore, "Lessons"),
-      where("classroomID", "==", id)
-    );
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      let data: any[] = [];
-      querySnapshot.forEach((docs) => {
-        data.push({ ...docs.data(), id: docs.id });
-      });
-      console.log("rendered: lessons");
-      setLesson(data);
-    });
-    return () => unsub();
-  }, []);
-
   return (
     <>
       <Stack direction={"row"} sx={{ width: "100%", height: "100vh" }}>
@@ -193,6 +177,8 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                     classID={id!}
                     isInvited={identifyIfInvited(user.id)}
                     inviteID={getInvitionID(user.id, id!)}
+                    teacherID={classroom?.teacher!}
+                    className={classroom?.className!}
                   />
                 )}
               </li>
@@ -227,7 +213,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                   Upload
                   <input
                     hidden
-                    accept="application/pdf application/msword"
+                    accept="application/pdf, application/msword, image/*"
                     type="file"
                     onChange={handdleOnChange}
                   />
@@ -235,42 +221,30 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
               </Stack>
             </Stack>
             <Divider />
-            {lesson.length > 0 ? (
-              <Grid
-                container
-                columns={{ xs: 4, sm: 8, md: 12 }}
-                sx={{ padding: 2 }}
-                spacing={{ xs: 2, md: 3 }}
-              >
-                {lesson.map((data) => (
-                  <Grid item xs={2} sm={4} md={4} key={data.id}>
-                    <LessonsCard
-                      key={data.id}
-                      lesson={data}
-                      lessonsID={data.id}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <Stack
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                direction={"column"}
-                spacing={1}
-              >
-                <img src={nolessons} width="500px" height={"400px"} />
+            {classroom != null &&
+              (classroom.lessons != null && classroom?.lessons.length > 0 ? (
+                classroom.lessons.map((data, index) => (
+                  <LessonsCard key={index} lesson={data} />
+                ))
+              ) : (
+                <Stack
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  direction={"column"}
+                  spacing={1}
+                >
+                  <img src={nolessons} width="500px" height={"400px"} />
 
-                <Typography component={"h2"} variant={"h5"}>
-                  No lessons yet!
-                </Typography>
-              </Stack>
-            )}
+                  <Typography component={"h2"} variant={"h5"}>
+                    No lessons yet!
+                  </Typography>
+                </Stack>
+              ))}
           </Stack>
           <Divider orientation="vertical" flexItem />
           <Stack sx={{ width: "30%", height: "100%" }} direction={"column"}>

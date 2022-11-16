@@ -9,7 +9,7 @@ import { Container, Grid } from "@mui/material";
 import CardMedia from "@mui/material/CardMedia";
 
 import { CardActionArea } from "@mui/material";
-import { getColor, getImage } from "../utils/Constants";
+import { getImage } from "../utils/Constants";
 interface ClassCardProps {
   classroom: Classroom;
   onClick: () => void;
@@ -29,7 +29,7 @@ const ClassCard: React.FunctionComponent<ClassCardProps> = (props) => {
           height={"190"}
           image={getImage(classroom.color)}
           sx={{ borderRadius: 2 }}
-          alt="green iguana"
+          alt="background"
         />
         <CardContent>
           <Typography
@@ -40,12 +40,24 @@ const ClassCard: React.FunctionComponent<ClassCardProps> = (props) => {
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              color: "black",
+              color: " #070707",
+              fontFamily: "Poppins",
+              fontStyle: "regular",
+              fontWeight: 400,
             }}
           >
             {classroom.className}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              fontFamily: "Poppins",
+              fontStyle: "normal",
+              color: " #070707",
+              fontWeight: 400,
+            }}
+          >
             {formatTimestamp(classroom.createdAt)}
           </Typography>
         </CardContent>

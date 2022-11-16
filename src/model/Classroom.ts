@@ -1,4 +1,5 @@
 import { doc, QueryDocumentSnapshot } from "firebase/firestore";
+import { Lesson } from "./Lesson";
 import { Users } from "./User";
 
 export interface Classroom {
@@ -6,6 +7,7 @@ export interface Classroom {
   createdAt: number;
   color: string;
   students: Array<string>;
+  lessons: Array<Lesson>;
   teacher: string;
 }
 export const classroomConveter = {

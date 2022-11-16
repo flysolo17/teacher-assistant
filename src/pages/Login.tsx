@@ -1,19 +1,12 @@
 import React, { useState } from "react";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+
 import { useNavigate } from "react-router-dom";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { userConverter, Users } from "../model/User";
+
 import {
   TextField,
   Box,
   Button,
   InputAdornment,
-  LinearProgress,
   Container,
   CircularProgress,
 } from "@mui/material";
@@ -26,6 +19,7 @@ import AlertPage from "../alerts/Alert";
 import { Stack } from "@mui/system";
 import { auth } from "../config/config";
 import { useAuth } from "../context/AuthContext";
+import FIlIPINO from "../images/fil.png";
 export interface ILoginPageProps {}
 
 const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
@@ -48,7 +42,7 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
   return (
     <>
       <div className="content">
-        <img src="images/hero.png" width={"80%"} height={350} />
+        <img src={FIlIPINO} width={"80%"} height={350} />
         <Box sx={{ width: 500, backgroundColor: "#fff", margin: 2 }}>
           <Stack
             direction={"column"}

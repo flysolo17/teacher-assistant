@@ -17,13 +17,13 @@ import { storage } from "../config/config";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { getDownloadURL, ref } from "firebase/storage";
 import { usePDF, Document, Page } from "@react-pdf/renderer";
+import { getFileColor, getFileType } from "../utils/Constants";
 interface LessonsCardProps {
   lesson: Lesson;
-  lessonsID: string;
 }
 
 const LessonsCard: React.FunctionComponent<LessonsCardProps> = (props) => {
-  const { lesson, lessonsID } = props;
+  const { lesson } = props;
   const theme = useTheme();
   function formatBytes(bytes: number, decimals = 2) {
     if (!+bytes) return "0 Bytes";
@@ -50,25 +50,51 @@ const LessonsCard: React.FunctionComponent<LessonsCardProps> = (props) => {
 
   return (
     <>
-      <Card sx={{ display: "flex", backgroundColor: "#FFC4AD", height: 200 }}>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <CardContent sx={{ flex: "1 0 auto" }}>
-            <Typography component="h2" variant="h6">
-              {lesson.name}
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              component="h2"
-            >
-              {formatBytes(lesson.size)}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button onClick={() => downloadPdf()}>Download</Button>
-          </CardActions>
-        </Box>
-      </Card>
+      <Box
+        sx={{
+          width: "95%",
+          backgroundColor: "white",
+          borderRadius: 2,
+          margin: 2,
+        }}
+      >
+        <Stack
+          sx={{
+            borderRadius: 2,
+            padding: 2,
+            backgroundColor: getFileColor(lesson.type),
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+          direction={"row"}
+          spacing={2}
+        >
+          <img src={getFileType(lesson.type)} width={"80px"} height={"80px"} />
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              color: " #070707",
+              fontFamily: "Poppins",
+              fontStyle: "regular",
+              fontWeight: 400,
+            }}
+          >
+            {lesson.name}
+          </Typography>
+          <Stack direction={"column"}>
+            <IconButton onClick={() => downloadPdf()}>
+              <FileDownloadIcon />
+            </IconButton>
+            <Typography>{formatBytes(lesson.size)}</Typography>
+          </Stack>
+        </Stack>
+      </Box>
     </>
   );
 };

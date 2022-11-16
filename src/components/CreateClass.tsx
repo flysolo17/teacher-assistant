@@ -86,7 +86,15 @@ const CreateClassDialog: React.FunctionComponent<ICreateDialogProps> = (
 
   return (
     <div>
-      <Button variant="contained" onClick={handleClickOpen} startIcon={<Add />}>
+      <Button
+        variant="contained"
+        onClick={handleClickOpen}
+        startIcon={<Add />}
+        color={"success"}
+        sx={{
+          margin: 3,
+        }}
+      >
         Create Class
       </Button>
       <BootstrapDialog

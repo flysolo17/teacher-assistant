@@ -16,6 +16,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import { navData } from "./NavData";
+import Person from "../images/class09.jpg";
 const drawerWidth = 300;
 
 interface Props {
@@ -54,12 +55,41 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
       >
         <Divider />
         <Stack>
-          <Typography variant={"h5"} component={"h1"} padding={5}>
+          <Typography
+            variant={"h5"}
+            component={"h1"}
+            padding={5}
+            sx={{
+              color: " #070707",
+              fontFamily: "Poppins",
+              fontStyle: "regular",
+              fontWeight: 400,
+            }}
+          >
             Teacher Assistant
           </Typography>
-          <Divider />
         </Stack>
         <List>
+          <Divider />
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate("/overview")}>
+              <ListItemIcon>{<InboxIcon />}</ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography
+                    sx={{
+                      color: "black",
+                      fontSize: 20,
+                      fontFamily: "poppins",
+                    }}
+                  >
+                    Overview
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
           {navData.map((item) => (
             <ListItem
               key={item.title}
@@ -67,8 +97,20 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
               disablePadding
             >
               <ListItemButton>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.title} />
+                <ListItemIcon color="black">{item.icon}</ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography
+                      sx={{
+                        color: "black",
+                        fontSize: 20,
+                        fontFamily: "poppins",
+                      }}
+                    >
+                      {item.title}
+                    </Typography>
+                  }
+                />
               </ListItemButton>
             </ListItem>
           ))}
