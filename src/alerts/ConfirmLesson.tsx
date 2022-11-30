@@ -5,12 +5,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  TextField,
   Typography,
 } from "@mui/material";
 import { Lesson } from "../model/Lesson";
 import { storage, firestore } from "../config/config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { LESSONS_PATH } from "../utils/Constants";
+import { LESSONS_PATH, quarters } from "../utils/Constants";
 import { v4 as uuidV4 } from "uuid";
 import {
   addDoc,
@@ -20,6 +21,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { Stack } from "@mui/system";
+import { useState } from "react";
 interface ConFirmLessonProps {
   open: boolean;
   handleClose: () => any;
@@ -42,6 +44,7 @@ const ConFirmLesson: React.FunctionComponent<ConFirmLessonProps> = (props) => {
             name: file.name,
             size: file.size,
             type: file.type,
+            quarter: parseInt(quarter),
             createdAt: new Date().getTime() / 1000,
             classroomID: classroomID,
           };
@@ -64,6 +67,11 @@ const ConFirmLesson: React.FunctionComponent<ConFirmLessonProps> = (props) => {
       console.error("Error adding document: ", e);
     }
   }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuarter(event.target.value);
+  };
+  const [quarter, setQuarter] = useState("1");
   return (
     <>
       <Dialog
@@ -88,6 +96,27 @@ const ConFirmLesson: React.FunctionComponent<ConFirmLessonProps> = (props) => {
                 <Typography variant={"subtitle1"} component={"h2"}>
                   type: {file.type!}
                 </Typography>
+
+                <TextField
+                  id="outlined-select-quater-native"
+                  select
+                  sx={{
+                    marginY: 2,
+                  }}
+                  label="Select Quarter"
+                  value={quarter}
+                  onChange={handleChange}
+                  SelectProps={{
+                    native: true,
+                  }}
+                  helperText="Please select quarter"
+                >
+                  {quarters.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
               </Stack>
             )}
           </DialogContentText>

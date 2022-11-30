@@ -1,30 +1,93 @@
 import {
   Avatar,
+  Badge,
   Box,
   CircularProgress,
   Container,
   Divider,
+  Grid,
+  List,
+  ListSubheader,
   Stack,
+  Tab,
+  Tabs,
   Typography,
 } from "@mui/material";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { cpSync } from "fs";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { firestore } from "../config/config";
 import { Classroom, classroomConveter } from "../model/Classroom";
 import { userConverter, Users } from "../model/User";
 import nolessons from "../images/nolessons.png";
 import LessonsCard from "../components/LessonsCard";
+import { Quiz } from "../model/Quiz";
+import QuizCard from "../components/QuizCard";
+import StudentQuizCard from "../components/StudentQuizCard";
+import { useAuth } from "../context/AuthContext";
+import {
+  computeUnAnsweredQuiz,
+  getLessonsPerQuarter,
+  getLessonsQuarters,
+  getQuarters,
+  quarters,
+} from "../utils/Constants";
+import { DataObject } from "@mui/icons-material";
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 interface StudentClassroomPageProps {}
 
 const StudentClassroomPage: React.FunctionComponent<
   StudentClassroomPageProps
 > = () => {
   const { id } = useParams();
+  const { currentUser } = useAuth();
   const [classroom, setClassroom] = useState<Classroom>();
   const [teacher, setTeacher] = useState<Users>();
   const [loading, setLoading] = useState(false);
+  const [value, setValue] = useState(0);
+  const navigate = useNavigate();
+  const [quiz, setQuiz] = useState<any[]>([]);
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
   async function getClassroomData() {
     const docRef = doc(firestore, "Classroom", id!).withConverter(
       classroomConveter
@@ -36,6 +99,12 @@ const StudentClassroomPage: React.FunctionComponent<
       getTeacherData(id);
     }
   }
+  const navigateToQuestions = (quizID: string) => {
+    navigate("take-quiz/" + quizID);
+  };
+  const navigateToResult = (quizID: string) => {
+    navigate("result/" + quizID);
+  };
   async function getTeacherData(teacherID: string) {
     const docRef = doc(firestore, "Users", teacherID).withConverter(
       userConverter
@@ -44,6 +113,24 @@ const StudentClassroomPage: React.FunctionComponent<
     if (snap.exists()) {
       setTeacher(snap.data());
     }
+  }
+  useEffect(() => {
+    if (id !== undefined) {
+      const ref = collection(firestore, "Classroom", id, "Quiz");
+      const q = query(ref, orderBy("createdAt", "desc"));
+      const unsub = onSnapshot(q, (snapshot) => {
+        let data: any = [];
+        snapshot.forEach((doc) => {
+          data.push({ ...doc.data(), id: doc.id });
+        });
+        setQuiz(data);
+      });
+      return () => unsub();
+    }
+  }, []);
+
+  function getQuizPerQuarter(quarter: number): any[] {
+    return quiz.filter((data) => data.quarter == quarter);
   }
   useEffect(() => {
     getClassroomData();
@@ -149,41 +236,134 @@ const StudentClassroomPage: React.FunctionComponent<
             {classroom?.className}
           </Typography>
         </Box>
-        <Divider />
-        <Typography
-          sx={{
-            fontFamily: "Poppins",
-            fontWeight: 400,
-            fontSize: 25,
-            fontStyle: "normal",
-            margin: 2,
-          }}
-        >
-          Lessons
-        </Typography>
-        {classroom != null &&
-          (classroom.lessons != null && classroom?.lessons.length > 0 ? (
-            classroom.lessons.map((data, index) => (
-              <LessonsCard key={index} lesson={data} />
-            ))
-          ) : (
-            <Stack
-              sx={{
-                width: "100%",
-
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              direction={"column"}
-              spacing={1}
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
             >
-              <img src={nolessons} width="500px" height={"400px"} />
-              <Typography component={"h2"} variant={"h5"}>
-                No lessons yet!
-              </Typography>
-            </Stack>
-          ))}
+              <Tab label="Lessons" {...a11yProps(0)} />
+              <Tab
+                label={
+                  <Badge
+                    badgeContent={computeUnAnsweredQuiz(
+                      quiz,
+                      currentUser?.uid!
+                    )}
+                    color="error"
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    Quizzes
+                  </Badge>
+                }
+                {...a11yProps(1)}
+              />
+            </Tabs>
+          </Box>
+          <TabPanel value={value} index={0}>
+            {classroom != null &&
+              (classroom.lessons != null && classroom?.lessons.length > 0 ? (
+                // classroom.lessons.map((data, index) => (
+                //   <LessonsCard key={index} lesson={data} />
+                // ))
+                getLessonsQuarters(classroom.lessons).map(
+                  (quarter, quarterIndex) => (
+                    <Stack direction={"column"} key={quarterIndex}>
+                      <Typography
+                        sx={{
+                          fontFamily: "Poppins",
+                          fontWeight: 400,
+                          fontSize: 30,
+                          fontStyle: "bold",
+                          marginY: 2,
+                          color: "black",
+                        }}
+                      >
+                        Quarter {quarter}
+                      </Typography>
+                      <Divider />
+                      <Grid
+                        container
+                        spacing={{ xs: 2, md: 3 }}
+                        columns={{ xs: 4, sm: 8, md: 12 }}
+                      >
+                        {getLessonsPerQuarter(quarter, classroom.lessons).map(
+                          (data, index) => (
+                            <Grid item xs={2} sm={4} md={4} key={index}>
+                              <LessonsCard lesson={data} />
+                            </Grid>
+                          )
+                        )}
+                      </Grid>
+                    </Stack>
+                  )
+                )
+              ) : (
+                <Stack
+                  sx={{
+                    width: "100%",
+
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  direction={"column"}
+                  spacing={1}
+                >
+                  <img src={nolessons} width="500px" height={"400px"} />
+                  <Typography component={"h2"} variant={"h5"}>
+                    No lessons yet!
+                  </Typography>
+                </Stack>
+              ))}
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            {getQuarters(quiz).map((quarter) => (
+              <Stack direction={"column"}>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    color: " #070707",
+                    margin: 2,
+                    fontFamily: "Poppins",
+                    fontStyle: "regular",
+                    fontWeight: 400,
+                  }}
+                >
+                  Quarter {quarter}
+                </Typography>
+                <Divider />
+
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  {getQuizPerQuarter(quarter).map((data, index) => (
+                    <Grid item xs={2} sm={4} md={4}>
+                      <StudentQuizCard
+                        quiz={data}
+                        key={index}
+                        myID={currentUser?.uid!}
+                        takeQuiz={() => navigateToQuestions(quiz[index].id)}
+                        viewResult={() => navigateToResult(quiz[index].id)}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+            ))}
+          </TabPanel>
+        </Box>
       </Stack>
     </Stack>
   );

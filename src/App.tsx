@@ -20,6 +20,10 @@ import { auth, firestore } from "./config/config";
 import { User } from "firebase/auth";
 import StudentClassroomPage from "./pages/StudentClassroom";
 import OverviewPage from "./pages/Overview";
+import CreateQuizPage from "./pages/CreateQuiz";
+import ViewQuizPage from "./pages/ViewQuiz";
+import TakeQuizPage from "./pages/TakeQuiz";
+import StudentViewResultPage from "./pages/StudentViewResult";
 export interface IApplicationProps {}
 const App: React.FunctionComponent<IApplicationProps> = (props) => {
   const currentUser: User | null = auth.currentUser;
@@ -37,8 +41,18 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
                 </AuthRoute>
               }
             />
-            <Route path=":id" element={<ClassroomPage />} />
+            <Route path=":id" element={<ClassroomPage />}></Route>
+            <Route path=":id/create-quiz" element={<CreateQuizPage />} />
+            <Route path=":id/view-quiz/:quizID" element={<ViewQuizPage />} />
             <Route path="student/:id" element={<StudentClassroomPage />} />
+            <Route
+              path="student/:id/take-quiz/:quizID"
+              element={<TakeQuizPage />}
+            />
+            <Route
+              path="student/:id/result/:quizID"
+              element={<StudentViewResultPage />}
+            />
           </Route>
 
           <Route

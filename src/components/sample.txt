@@ -49,15 +49,28 @@ const LessonsCard: React.FunctionComponent<LessonsCardProps> = (props) => {
   }
 
   return (
-    <Card sx={{ display: "flex", margin: 2 }}>
-      <CardMedia
-        component="img"
-        sx={{ width: 50, height: 50, margin: 2 }}
-        image={getFileType(lesson.type)}
-        alt="File Type"
-      />
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <CardContent sx={{ flex: "1 0 auto" }}>
+    <>
+      <Box
+        sx={{
+          width: "95%",
+          backgroundColor: "white",
+          borderRadius: 2,
+          margin: 2,
+        }}
+      >
+        <Stack
+          sx={{
+            borderRadius: 2,
+            padding: 2,
+            backgroundColor: getFileColor(lesson.type),
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+          direction={"row"}
+          spacing={2}
+        >
+          <img src={getFileType(lesson.type)} width={"80px"} height={"80px"} />
           <Typography
             gutterBottom
             variant="h5"
@@ -74,16 +87,15 @@ const LessonsCard: React.FunctionComponent<LessonsCardProps> = (props) => {
           >
             {lesson.name}
           </Typography>
-
-          <Typography>{formatBytes(lesson.size)}</Typography>
-        </CardContent>
-        <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
-          <IconButton onClick={() => downloadPdf()}>
-            <FileDownloadIcon />
-          </IconButton>
-        </Box>
+          <Stack direction={"column"}>
+            <IconButton onClick={() => downloadPdf()}>
+              <FileDownloadIcon />
+            </IconButton>
+            <Typography>{formatBytes(lesson.size)}</Typography>
+          </Stack>
+        </Stack>
       </Box>
-    </Card>
+    </>
   );
 };
 

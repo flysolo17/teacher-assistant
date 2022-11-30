@@ -5,6 +5,7 @@ export interface Lesson {
   name: string;
   size: number;
   type: string;
+  quarter: number;
   createdAt: number;
   classroomID: string;
 }

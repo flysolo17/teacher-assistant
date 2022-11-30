@@ -1,5 +1,6 @@
 import { doc, QueryDocumentSnapshot } from "firebase/firestore";
 import { Lesson } from "./Lesson";
+import { Quiz } from "./Quiz";
 import { Users } from "./User";
 
 export interface Classroom {

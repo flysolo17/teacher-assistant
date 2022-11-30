@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Collapse,
+  Container,
   Divider,
   Fab,
   Grid,
@@ -19,6 +20,7 @@ import {
   doc,
   getDoc,
   onSnapshot,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -38,6 +40,7 @@ import { Lesson } from "../model/Lesson";
 import LessonsCard from "../components/LessonsCard";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../context/AuthContext";
+import QuizCard from "../components/QuizCard";
 
 interface ClassroomPageProps {}
 
@@ -49,6 +52,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
   const [pickedFile, setPickedFile] = useState(null);
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [quiz, setQuiz] = useState<any[]>([]);
   const { currentUser } = useAuth();
   const handleClickOpen = () => {
     setOpen(true);
@@ -69,6 +73,23 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
       navigate("/*");
     }
   }
+
+  useEffect(() => {
+    if (id !== undefined) {
+      const reference = collection(firestore, "Classroom", id, "Quiz");
+      const quizQuery = query(reference, orderBy("createdAt", "desc"));
+      const unsub = onSnapshot(quizQuery, (snapshot) => {
+        let data: any[] = [];
+        snapshot.forEach((doc) => {
+          data.push({ ...doc.data(), id: doc.id });
+        });
+        setQuiz(data);
+
+        console.log("quiz");
+      });
+      return () => unsub();
+    }
+  }, []);
 
   useEffect(() => {
     getClassroomData();
@@ -109,6 +130,12 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
     });
     return id;
   }
+  const navigateToCreateQuiz = () => {
+    navigate("create-quiz");
+  };
+  const navigateToViewQuiz = (id: string) => {
+    navigate("view-quiz/" + id);
+  };
 
   useEffect(() => {
     const q = query(
@@ -247,10 +274,38 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
               ))}
           </Stack>
           <Divider orientation="vertical" flexItem />
-          <Stack sx={{ width: "30%", height: "100%" }} direction={"column"}>
-            <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-              Quiz
-            </Typography>
+          <Stack
+            sx={{ width: "30%", height: "100%", paddingX: 2 }}
+            direction={"column"}
+          >
+            <Container
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
+                Quiz
+              </Typography>
+              <Button
+                color={"success"}
+                variant={"contained"}
+                onClick={navigateToCreateQuiz}
+              >
+                Create Quiz
+              </Button>
+            </Container>
+            <List sx={{ width: "100%" }}>
+              {quiz.map((data) => (
+                <QuizCard
+                  quiz={data}
+                  key={data.id}
+                  clickQuiz={() => navigateToViewQuiz(data.id)}
+                />
+              ))}
+            </List>
           </Stack>
         </Stack>
       </Stack>

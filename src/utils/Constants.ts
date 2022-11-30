@@ -12,6 +12,8 @@ import MP4 from "../images/mp4.png";
 import FILE from "../images/file.png";
 import JPG from "../images/jpg.png";
 import DOC from "../images/doc.png";
+import { Quiz } from "../model/Quiz";
+import { Lesson } from "../model/Lesson";
 export const colorPicker: string[] = [
   "#C7C6FA",
   "#97F8C0",
@@ -116,3 +118,70 @@ export function formatTimestamp(timestamp: number) {
   const current_datetime = new Date(timestamp);
   return current_datetime.toLocaleString();
 }
+export const quarters = [
+  {
+    value: "1",
+    label: "1ST QUARTER",
+  },
+  {
+    value: "2",
+    label: "2ND QUARTER",
+  },
+  {
+    value: "3",
+    label: "3RD QUARTER",
+  },
+  {
+    value: "4",
+    label: "4TH QUARTER",
+  },
+];
+
+export const getQuarters = (list: Quiz[]): number[] => {
+  const current = list.map((data) => data.quarter);
+  return current.filter((value, index) => current.indexOf(value) === index);
+};
+
+export const getLessonsQuarters = (list: Lesson[]): number[] => {
+  const current = list.map((data) => data.quarter);
+  return current.filter((value, index) => current.indexOf(value) === index);
+};
+export const getLessonsPerQuarter = (
+  quarter: number,
+  lessons: Lesson[]
+): Lesson[] => {
+  return lessons.filter((data) => data.quarter == quarter);
+};
+
+export const getScore = (quiz: Quiz, myID: string): string => {
+  var result = "";
+  const over = quiz.questions.length;
+  const quizzee = quiz.students.filter((student) => student.studentID == myID);
+  let score = 0;
+  if (quiz.isOpen) {
+    if (quizzee.length != 0) {
+      quiz.questions.map((data, index) => {
+        if (data.answer == quizzee[0].answers[index]) {
+          score += 1;
+        }
+      });
+      if (quiz.showResult) {
+        result = score + " / " + over;
+      }
+    }
+  }
+
+  return result;
+};
+export const computeTotalScore = (answerSheet: string, answer: string) => {};
+
+export const computeUnAnsweredQuiz = (quiz: Quiz[], myID: string): number => {
+  var result = 0;
+  quiz.map((data) => {
+    const stud = data.students.map((s) => s.studentID);
+    if (!stud.includes(myID)) {
+      result += 1;
+    }
+  });
+  return result;
+};
