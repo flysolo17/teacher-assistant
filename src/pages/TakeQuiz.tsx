@@ -28,7 +28,7 @@ const TakeQuizPage: React.FunctionComponent<TakeQuizPageProps> = () => {
   const onAnswerChange = (answer: string, index: number) => {
     listAnswers[index] = answer;
   };
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (id !== undefined && quizID !== undefined) {
       const docRef = doc(firestore, "Classroom", id, "Quiz", quizID);
       const myAnswer = {
@@ -36,11 +36,20 @@ const TakeQuizPage: React.FunctionComponent<TakeQuizPageProps> = () => {
         answers: listAnswers,
         takenAt: new Date().getTime() / 1000,
       };
-      await updateDoc(docRef, {
+      updateDoc(docRef, {
         students: arrayUnion(myAnswer),
-      }).then(() => {
-        navigate(-1);
-      });
+      })
+        .then(() => {
+          console.log("Success");
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          navigate(-1);
+        });
+    } else {
+      console.log("error");
     }
   };
   const getQuiz = (id: string, quizID: string) => {

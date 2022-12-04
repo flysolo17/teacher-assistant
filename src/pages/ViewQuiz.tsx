@@ -12,25 +12,17 @@ import {
   Container,
   Divider,
   FormControlLabel,
+  List,
   Stack,
   Switch,
 } from "@mui/material";
 
 import { Button, Paper, TextField } from "@mui/material";
 import { useState } from "react";
-import IconButton from "@mui/material/IconButton";
-import SaveIcon from "@mui/icons-material/Save";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ClearIcon from "@mui/icons-material/Clear";
-import AddIcon from "@mui/icons-material/Add";
-import { quarters } from "../utils/Constants";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
 
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import { AddBox } from "@mui/icons-material";
-import { async } from "@firebase/util";
+import TeacherQuestionCard from "../components/TeacherQuestionCard";
+import Responses from "../components/Responses";
+import { responsesScores } from "../utils/Constants";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -91,7 +83,7 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
     if (id !== undefined && quizID !== undefined) {
       const docRef = doc(firestore, "Classroom", id, "Quiz", quizID);
       await updateDoc(docRef, {
-        showResult: quiz?.isOpen ? false : true,
+        showResult: quiz?.showResult ? false : true,
       });
     }
   };
@@ -138,7 +130,7 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="Questions" {...a11yProps(0)} />
+          <Tab label="Mga Pagsusulit" {...a11yProps(0)} />
 
           <Tab
             label={
@@ -150,7 +142,7 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
                   horizontal: "right",
                 }}
               >
-                Responses
+                Mga Sumagot
               </Badge>
             }
             {...a11yProps(1)}
@@ -160,55 +152,15 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
       </Box>
       <TabPanel value={value} index={0}>
         {quiz?.questions.map((question, index) => (
-          <Stack
-            direction={"column"}
-            spacing={1}
-            key={index}
-            sx={{
-              marginY: 2,
-              backgroundColor: "white",
-              flexGrow: 1,
-              padding: 3,
-              borderRadius: 2,
-            }}
-          >
-            <Typography>Question {index + 1}</Typography>
-
-            <TextField
-              label="Question"
-              placeholder="Write Question here"
-              multiline
-              name={"name"}
-              value={question.name}
-            />
-
-            {question.choices.map((value, i) => (
-              <Stack key={i} direction={"row"}>
-                <TextField
-                  label="Choice"
-                  fullWidth
-                  placeholder="Write Choices here"
-                  name={"choices"}
-                  value={value}
-                  variant="standard"
-                />
-              </Stack>
-            ))}
-
-            <TextField
-              label="Answer"
-              fullWidth={false}
-              placeholder="Write Anwer here"
-              name={"answer"}
-              value={question.answer}
-              sx={{ width: "40%" }}
-              variant="standard"
-            />
-          </Stack>
+          <TeacherQuestionCard question={question} key={index} />
         ))}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Responses is working!
+        <List sx={{ width: "100%", margin: 5 }}>
+          {quiz?.students.map((responses, index) => (
+            <Responses student={responses} index={index} quiz={quiz} />
+          ))}
+        </List>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Paper

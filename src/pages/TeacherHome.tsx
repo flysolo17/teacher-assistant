@@ -15,7 +15,7 @@ import { firestore } from "../config/config";
 import { useAuth } from "../context/AuthContext";
 import teaching from "../images/teaching.png";
 import { useNavigate } from "react-router-dom";
-import {  getImage } from "../utils/Constants";
+import { getImage } from "../utils/Constants";
 
 interface TeacherHomePageProps {}
 
@@ -49,7 +49,7 @@ const TeacherHomePage: React.FunctionComponent<TeacherHomePageProps> = () => {
     <>
       <div className="teacher-homepage">
         <div className="header">
-          <p className="name">My Classes</p>
+          <p className="name">Mga Klase</p>
         </div>
 
         <Divider />
@@ -87,7 +87,7 @@ const TeacherHomePage: React.FunctionComponent<TeacherHomePageProps> = () => {
                   variant="h6"
                   sx={{ margin: "auto" }}
                 >
-                  No Classrooms yet!
+                  Wala pang klase
                 </Typography>
               </Stack>
             )}

@@ -11,11 +11,13 @@ import {
 } from "@mui/material";
 import { Questions } from "../model/Questions";
 
-interface ViewQuizCardProps {
+interface TeacherQuestionCardProps {
   question: Questions;
 }
 
-const ViewQuizCard: React.FunctionComponent<ViewQuizCardProps> = (props) => {
+const TeacherQuestionCard: React.FunctionComponent<TeacherQuestionCardProps> = (
+  props
+) => {
   const { question } = props;
   return (
     <Paper
@@ -83,4 +85,4 @@ const ViewQuizCard: React.FunctionComponent<ViewQuizCardProps> = (props) => {
   );
 };
 
-export default ViewQuizCard;
+export default TeacherQuestionCard;

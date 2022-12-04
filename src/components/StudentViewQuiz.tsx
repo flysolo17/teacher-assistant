@@ -1,3 +1,4 @@
+import { Quiz } from "@mui/icons-material";
 import {
   TextField,
   Box,
@@ -9,39 +10,76 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Questions } from "../model/Questions";
 
-interface ViewQuizCardProps {
+interface StudentViewQuizProps {
   question: Questions;
+  myAnswer: string;
 }
 
-const ViewQuizCard: React.FunctionComponent<ViewQuizCardProps> = (props) => {
-  const { question } = props;
+const StudentViewQuiz: React.FunctionComponent<StudentViewQuizProps> = (
+  props
+) => {
+  const { question, myAnswer } = props;
+  const [color, setColor] = useState("");
+  const getColor = (question: string, myAns: string) => {
+    if (question == myAns) {
+      setColor("#00c000");
+    } else {
+      setColor("#f44336");
+    }
+  };
+  useEffect(() => {
+    getColor(question.answer, myAnswer);
+  }, []);
   return (
     <Paper
       sx={{
         borderRadius: 5,
         padding: 3,
         margin: 1,
+        borderLeft: 5,
+        borderColor: color,
       }}
     >
-      <Stack sx={{ width: "100%" }} direction={"column"} spacing={2}>
-        <Typography
+      <Stack sx={{ width: "100%" }} direction={"column"} spacing={3}>
+        <Box
           sx={{
-            fontFamily: "Poppins",
-            fontWeight: 700,
-            fontStyle: "normal",
-            fontSize: 24,
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          {question.name}
-        </Typography>
+          <Typography
+            sx={{
+              fontFamily: "Poppins",
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: 24,
+            }}
+          >
+            {question.name}
+          </Typography>
+          <Typography
+            sx={{
+              fontFamily: "Poppins",
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: 24,
+            }}
+          >
+            {question.answer == myAnswer ? 1 : 0}
+          </Typography>
+        </Box>
+
         {question.choices.length > 0 ? (
           <FormControl sx={{ marginX: 3 }}>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               name="radio-buttons-group"
-              defaultValue={question.answer}
+              value={myAnswer}
             >
               {question.choices.map((data, index) => (
                 <FormControlLabel
@@ -65,7 +103,7 @@ const ViewQuizCard: React.FunctionComponent<ViewQuizCardProps> = (props) => {
             </RadioGroup>
           </FormControl>
         ) : (
-          <TextField label={"Answer"} value={question.answer} />
+          <TextField label={"Answer"} value={myAnswer} size={"small"} />
         )}
         <Typography
           sx={{
@@ -83,4 +121,4 @@ const ViewQuizCard: React.FunctionComponent<ViewQuizCardProps> = (props) => {
   );
 };
 
-export default ViewQuizCard;
+export default StudentViewQuiz;

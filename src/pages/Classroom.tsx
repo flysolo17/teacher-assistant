@@ -168,7 +168,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
       <Stack direction={"row"} sx={{ width: "100%", height: "100vh" }}>
         <Stack direction={"column"} sx={{ width: "20%", padding: 1 }}>
           <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-            Students
+            Mga Studyante
           </Typography>
           <List
             sx={{
@@ -190,10 +190,10 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                   </li>
                 ))
               ) : (
-                <h1>No students</h1>
+                <h1>Wala pang studyante</h1>
               ))}
             <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-              Other
+              Iba pa
             </Typography>
 
             {users.map((user) => (
@@ -237,7 +237,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                   startIcon={<AddIcon />}
                   color="warning"
                 >
-                  Upload
+                  Mag upload ng aralin
                   <input
                     hidden
                     accept="application/pdf, application/msword, image/*"
@@ -268,7 +268,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                   <img src={nolessons} width="500px" height={"400px"} />
 
                   <Typography component={"h2"} variant={"h5"}>
-                    No lessons yet!
+                    Wala pang mga aralin
                   </Typography>
                 </Stack>
               ))}
@@ -287,14 +287,14 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
               }}
             >
               <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-                Quiz
+                Pagsusulit
               </Typography>
               <Button
                 color={"success"}
                 variant={"contained"}
                 onClick={navigateToCreateQuiz}
               >
-                Create Quiz
+                Gumawa ng pagsusulit
               </Button>
             </Container>
             <List sx={{ width: "100%" }}>

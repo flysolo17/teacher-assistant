@@ -14,6 +14,7 @@ import JPG from "../images/jpg.png";
 import DOC from "../images/doc.png";
 import { Quiz } from "../model/Quiz";
 import { Lesson } from "../model/Lesson";
+import { Student } from "../model/Student";
 export const colorPicker: string[] = [
   "#C7C6FA",
   "#97F8C0",
@@ -170,6 +171,24 @@ export const getScore = (quiz: Quiz, myID: string): string => {
       }
     }
   }
+  return result;
+};
+
+export const getStudent = (quiz: Quiz, myID: string): Student => {
+  const quizzee = quiz.students.filter((student) => student.studentID == myID);
+
+  return quizzee[0];
+};
+export const responsesScores = (quiz: Quiz, student: Student): string => {
+  var result = "";
+  const over = quiz.questions.length;
+  let score = 0;
+  quiz.questions.map((data, index) => {
+    if (data.answer == student.answers[index]) {
+      score += 1;
+    }
+    result = score + " / " + over;
+  });
 
   return result;
 };

@@ -30,7 +30,6 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
   const [users, setUser] = useState<Users | null>(null);
   const navigate = useNavigate();
 
-
   const fullname =
     users?.firstName + " " + users?.middleName + " " + users?.lastName;
 
@@ -126,7 +125,7 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
             variant={"h5"}
             sx={{ fontWeight: 300, fontFamily: "poppins" }}
           >
-            Your Images
+            Mga Litrato
           </Typography>
           <Divider sx={{ marginY: 2, backgroundColor: "black" }} />
           <Grid

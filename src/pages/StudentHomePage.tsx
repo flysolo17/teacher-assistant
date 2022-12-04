@@ -141,7 +141,7 @@ const StudentHomePage: React.FunctionComponent<IStudentHomePageProps> = (
   return (
     <Box sx={{ width: "100%", padding: 4 }}>
       <div className="header">
-        <p className="name">My Classes</p>
+        <p className="name">Mga klase </p>
       </div>
       <Divider />
       <Stack sx={{ width: "100%" }} direction={"row"}>
@@ -170,7 +170,7 @@ const StudentHomePage: React.FunctionComponent<IStudentHomePageProps> = (
                   variant="h6"
                   sx={{ margin: "auto" }}
                 >
-                  No Classrooms yet!
+                  Wala pang klase
                 </Typography>
               </Stack>
             )}
@@ -191,7 +191,7 @@ const StudentHomePage: React.FunctionComponent<IStudentHomePageProps> = (
               fontWeight: 400,
             }}
           >
-            Invitations
+            Mga Imbitasyon
           </Typography>
           <List
             sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}

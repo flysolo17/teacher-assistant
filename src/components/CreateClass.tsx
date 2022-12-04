@@ -95,7 +95,7 @@ const CreateClassDialog: React.FunctionComponent<ICreateDialogProps> = (
           margin: 3,
         }}
       >
-        Create Class
+        Gumawa ng klase
       </Button>
       <BootstrapDialog
         maxWidth={"sm"}

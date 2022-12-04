@@ -203,7 +203,7 @@ const StudentClassroomPage: React.FunctionComponent<
               fontStyle: "normal",
             }}
           >
-            Teacher
+            Guro
           </Typography>
         </Container>
       </Stack>
@@ -243,7 +243,7 @@ const StudentClassroomPage: React.FunctionComponent<
               onChange={handleChange}
               aria-label="basic tabs example"
             >
-              <Tab label="Lessons" {...a11yProps(0)} />
+              <Tab label="Mga Aralin" {...a11yProps(0)} />
               <Tab
                 label={
                   <Badge
@@ -257,7 +257,7 @@ const StudentClassroomPage: React.FunctionComponent<
                       horizontal: "right",
                     }}
                   >
-                    Quizzes
+                    Mga Pagsusulit
                   </Badge>
                 }
                 {...a11yProps(1)}
@@ -316,7 +316,7 @@ const StudentClassroomPage: React.FunctionComponent<
                 >
                   <img src={nolessons} width="500px" height={"400px"} />
                   <Typography component={"h2"} variant={"h5"}>
-                    No lessons yet!
+                    Wala pang aralin
                   </Typography>
                 </Stack>
               ))}
@@ -354,8 +354,8 @@ const StudentClassroomPage: React.FunctionComponent<
                         quiz={data}
                         key={index}
                         myID={currentUser?.uid!}
-                        takeQuiz={() => navigateToQuestions(quiz[index].id)}
-                        viewResult={() => navigateToResult(quiz[index].id)}
+                        takeQuiz={() => navigateToQuestions(data.id)}
+                        viewResult={() => navigateToResult(data.id)}
                       />
                     </Grid>
                   ))}
