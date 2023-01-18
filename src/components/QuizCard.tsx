@@ -15,7 +15,16 @@ const QuizCard: React.FunctionComponent<QuizCardProps> = (props) => {
   const { quiz, clickQuiz } = props;
   return (
     <>
-      <ListItem alignItems="flex-start" onClick={clickQuiz}>
+      <ListItem
+        alignItems="flex-start"
+        onClick={clickQuiz}
+        sx={{
+          ":hover": {
+            cursor: "pointer",
+            backgroundColor: "skyblue",
+          },
+        }}
+      >
         <ListItemText
           primary={
             <Typography

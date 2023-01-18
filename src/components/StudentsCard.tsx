@@ -8,19 +8,40 @@ import Typography from "@mui/material/Typography";
 import { Users } from "../model/User";
 import { Button } from "@mui/material";
 import { Stack } from "@mui/system";
-import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayRemove,
+  collection,
+  deleteDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { firestore } from "../config/config";
 import { async } from "@firebase/util";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import BackspaceIcon from "@mui/icons-material/Backspace";
 interface IStudentsCardProps {
   user: Users;
   userID: string;
+  index: number;
+  classroomID: string;
 }
 
 const StudentsCard: React.FunctionComponent<IStudentsCardProps> = (props) => {
-  const { user, userID } = props;
+  const { user, userID, index, classroomID } = props;
   const fullName = user.firstName + " " + user.middleName + " " + user.lastName;
+  const deleteStudent = () => {
+    updateDoc(doc(firestore, "Classroom", classroomID), {
+      students: arrayRemove(user.id),
+    })
+      .then(() => console.log("success"))
+      .catch((err) => console.log(err.message))
+      .finally(() => {
+        console.log("done");
+      });
+  };
   return (
     <>
       <ul>
@@ -38,7 +59,11 @@ const StudentsCard: React.FunctionComponent<IStudentsCardProps> = (props) => {
               {user.email}
             </Typography>
           </Stack>
+          <IconButton aria-label="delete" color="error" onClick={deleteStudent}>
+            <DeleteIcon />
+          </IconButton>
         </Stack>
+
         <Divider variant="inset" />
       </ul>
     </>

@@ -41,6 +41,7 @@ import LessonsCard from "../components/LessonsCard";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../context/AuthContext";
 import QuizCard from "../components/QuizCard";
+import { Height } from "@mui/icons-material";
 
 interface ClassroomPageProps {}
 
@@ -164,159 +165,138 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
   };
 
   return (
-    <>
-      <Stack direction={"row"} sx={{ width: "100%", height: "100vh" }}>
-        <Stack direction={"column"} sx={{ width: "20%", padding: 1 }}>
-          <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-            Mga Studyante
-          </Typography>
-          <List
-            sx={{
-              width: "100%",
-              maxWidth: 360,
-              position: "relative",
-              overflow: "auto",
-              maxHeight: "100%s",
-              "& ul": { padding: 0 },
-            }}
-          >
-            {classroom != null &&
-              (classroom?.students.length > 0 ? (
-                users.map((user) => (
-                  <li key={user.id}>
-                    {classroom.students.includes(user.id) && (
-                      <StudentsCard user={user} userID={user.id} />
-                    )}
-                  </li>
-                ))
-              ) : (
-                <h1>Wala pang studyante</h1>
-              ))}
-            <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-              Iba pa
-            </Typography>
-
-            {users.map((user) => (
-              <li key={user.id}>
-                {!classroom?.students.includes(user.id) && (
-                  <UsersCard
-                    user={user}
-                    classID={id!}
-                    isInvited={identifyIfInvited(user.id)}
-                    inviteID={getInvitionID(user.id, id!)}
-                    teacherID={classroom?.teacher!}
-                    className={classroom?.className!}
-                  />
-                )}
-              </li>
+    <Stack
+      sx={{
+        width: "100%",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+      direction="row"
+    >
+      <Container sx={{ width: "20%", overflow: "auto" }}>
+        <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
+          Mga Studyante
+        </Typography>
+        <List
+          sx={{
+            width: "100%",
+            maxWidth: 360,
+            position: "relative",
+            overflow: "auto",
+            maxHeight: "100%s",
+            "& ul": { padding: 0 },
+          }}
+        >
+          {classroom != null &&
+            (classroom?.students.length > 0 ? (
+              users.map((user, index) => (
+                <li key={user.id}>
+                  {classroom.students.includes(user.id) && (
+                    <StudentsCard
+                      user={user}
+                      userID={user.id}
+                      index={index}
+                      classroomID={id!}
+                    />
+                  )}
+                </li>
+              ))
+            ) : (
+              <h1>Wala pang studyante</h1>
             ))}
-          </List>
-        </Stack>
-        <Divider orientation="vertical" flexItem />
-
-        <Stack sx={{ width: "80%", height: "100%" }} direction={"row"}>
-          <Stack sx={{ width: "70%", height: "100%" }} direction={"column"}>
-            <Stack
-              direction={"row"}
-              sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-                {classroom?.className}
-              </Typography>
-              <Stack direction={"row"} spacing={2} padding={2}>
-                <IconButton>
-                  <DeleteIcon color="error" />
-                </IconButton>
-                <Button
-                  variant="contained"
-                  component="label"
-                  startIcon={<AddIcon />}
-                  color="warning"
-                >
-                  Mag upload ng aralin
-                  <input
-                    hidden
-                    accept="application/pdf, application/msword, image/*"
-                    type="file"
-                    onChange={handdleOnChange}
-                  />
-                </Button>
-              </Stack>
-            </Stack>
-            <Divider />
-            {classroom != null &&
-              (classroom.lessons != null && classroom?.lessons.length > 0 ? (
-                classroom.lessons.map((data, index) => (
-                  <LessonsCard key={index} lesson={data} />
-                ))
-              ) : (
-                <Stack
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  direction={"column"}
-                  spacing={1}
-                >
-                  <img src={nolessons} width="500px" height={"400px"} />
-
-                  <Typography component={"h2"} variant={"h5"}>
-                    Wala pang mga aralin
-                  </Typography>
-                </Stack>
-              ))}
-          </Stack>
-          <Divider orientation="vertical" flexItem />
-          <Stack
-            sx={{ width: "30%", height: "100%", paddingX: 2 }}
-            direction={"column"}
-          >
-            <Container
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-                Pagsusulit
-              </Typography>
-              <Button
-                color={"success"}
-                variant={"contained"}
-                onClick={navigateToCreateQuiz}
-              >
-                Gumawa ng pagsusulit
-              </Button>
-            </Container>
-            <List sx={{ width: "100%" }}>
-              {quiz.map((data) => (
-                <QuizCard
-                  quiz={data}
-                  key={data.id}
-                  clickQuiz={() => navigateToViewQuiz(data.id)}
+          <Typography
+            component={"h2"}
+            variant={"h5"}
+            sx={{ margin: 2 }}
+          ></Typography>
+          {users.map((user) => (
+            <li key={user.id}>
+              {!classroom?.students.includes(user.id) && (
+                <UsersCard
+                  user={user}
+                  classID={id!}
+                  isInvited={identifyIfInvited(user.id)}
+                  inviteID={getInvitionID(user.id, id!)}
+                  teacherID={classroom?.teacher!}
+                  className={classroom?.className!}
                 />
-              ))}
-            </List>
-          </Stack>
+              )}
+            </li>
+          ))}
+        </List>
+
+        <Divider orientation="vertical" flexItem />
+      </Container>
+      <Container sx={{ width: "50%" }}>
+        <Typography component={"h2"} variant={"h3"} sx={{ margin: 2 }}>
+          {classroom?.className}
+        </Typography>
+        <Divider />
+        <Container
+          sx={{
+            width: "100%",
+            overflow: "auto",
+            height: "90%",
+          }}
+        >
+                 {" "}
+          {classroom != null &&
+            (classroom.lessons != null && classroom?.lessons.length > 0 ? (
+              classroom.lessons.map((data, index) => (
+                <LessonsCard key={index} lesson={data} />
+              ))
+            ) : (
+              <Stack
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                direction={"column"}
+                spacing={1}
+              >
+                                 {" "}
+                <img src={nolessons} width="500px" height={"400px"} />         
+                       {" "}
+                <Typography component={"h2"} variant={"h5"}>
+                                      Wala pang mga aralin                  {" "}
+                </Typography>
+                               {" "}
+              </Stack>
+            ))}
+        </Container>
+      </Container>
+      <Container sx={{ width: "30%" }}>
+        <Stack
+          direction={"row"}
+          sx={{ padding: "1rem", justifyContent: "space-between" }}
+        >
+          <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
+            Pagsusulit
+          </Typography>
+
+          <Button
+            color={"success"}
+            variant={"contained"}
+            onClick={navigateToCreateQuiz}
+          >
+            Gumawa ng pagsusulit
+          </Button>
         </Stack>
-      </Stack>
-      <ConFirmLesson
-        open={open}
-        handleClose={handleClose}
-        handleOpen={handleClickOpen}
-        file={pickedFile}
-        classroomID={id!}
-      />
-    </>
+        <Divider />
+        <List sx={{ width: "100%", height: "100%", overflow: "auto" }}>
+          {quiz.map((data) => (
+            <QuizCard
+              quiz={data}
+              key={data.id}
+              clickQuiz={() => navigateToViewQuiz(data.id)}
+            />
+          ))}
+        </List>
+      </Container>
+    </Stack>
   );
 };
 
