@@ -19,11 +19,14 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, firestore } from "./config/config";
 import { User } from "firebase/auth";
 import StudentClassroomPage from "./pages/StudentClassroom";
-import OverviewPage from "./pages/Overview";
+
 import CreateQuizPage from "./pages/CreateQuiz";
 import ViewQuizPage from "./pages/ViewQuiz";
 import TakeQuizPage from "./pages/TakeQuiz";
 import StudentViewResultPage from "./pages/StudentViewResult";
+import { Announcement } from "@mui/icons-material";
+import AnnouncementPage from "./pages/AnnouncementPage";
+import QuizPage from "./pages/Quiz";
 export interface IApplicationProps {}
 const App: React.FunctionComponent<IApplicationProps> = (props) => {
   const currentUser: User | null = auth.currentUser;
@@ -41,6 +44,7 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
                 </AuthRoute>
               }
             />
+
             <Route path=":id" element={<ClassroomPage />}></Route>
             <Route path=":id/create-quiz" element={<CreateQuizPage />} />
             <Route path=":id/view-quiz/:quizID" element={<ViewQuizPage />} />
@@ -64,6 +68,22 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
             }
           />
           <Route
+            path="/quiz"
+            element={
+              <AuthRoute>
+                <QuizPage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/announcement"
+            element={
+              <AuthRoute>
+                <AnnouncementPage />
+              </AuthRoute>
+            }
+          />
+          <Route
             path="/"
             element={
               <AuthRoute>
@@ -71,14 +91,7 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
               </AuthRoute>
             }
           />
-          <Route
-            path="/overview"
-            element={
-              <AuthRoute>
-                <OverviewPage />
-              </AuthRoute>
-            }
-          />
+
           <Route
             path="/profile/edit/:id"
             element={

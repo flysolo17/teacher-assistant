@@ -15,8 +15,14 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
-import { navData } from "./NavData";
+import { studentNavData, teacherNavData } from "./NavData";
 import Person from "../images/class09.jpg";
+import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { firestore } from "../config/config";
+import { doc, getDoc } from "firebase/firestore";
+import { userConverter, Users } from "../model/User";
+import { CircularProgress, Container } from "@mui/material";
 const drawerWidth = 300;
 
 interface Props {
@@ -30,6 +36,52 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const { currentUser, loading } = useAuth();
+  const [user, setUser] = useState<Users | null>(null);
+
+  async function getAccount() {
+    const docRef = doc(firestore, "Users", currentUser?.uid!).withConverter(
+      userConverter
+    );
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setUser(docSnap.data());
+    }
+  }
+  useEffect(() => {
+    if (currentUser != null) {
+      getAccount();
+    }
+  }, [currentUser]);
+
+  if (loading) {
+    return (
+      <>
+        <Container
+          sx={{
+            width: "100%",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Container>
+      </>
+    );
+  }
+  function getNavData(userType: string): {
+    title: string;
+    path: string;
+    icon: JSX.Element;
+  }[] {
+    if (userType === "Teacher") {
+      return teacherNavData;
+    } else {
+      return studentNavData;
+    }
+  }
   return (
     <Box
       sx={{
@@ -70,50 +122,31 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
           </Typography>
         </Stack>
         <List>
-          <Divider />
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate("/overview")}>
-              <ListItemIcon>{<InboxIcon />}</ListItemIcon>
-              <ListItemText
-                primary={
-                  <Typography
-                    sx={{
-                      color: "black",
-                      fontSize: 20,
-                      fontFamily: "poppins",
-                    }}
-                  >
-                    Overview
-                  </Typography>
-                }
-              />
-            </ListItemButton>
-          </ListItem>
-          <Divider />
-          {navData.map((item) => (
-            <ListItem
-              key={item.title}
-              onClick={() => navigate(item.path)}
-              disablePadding
-            >
-              <ListItemButton>
-                <ListItemIcon color="black">{item.icon}</ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Typography
-                      sx={{
-                        color: "black",
-                        fontSize: 20,
-                        fontFamily: "poppins",
-                      }}
-                    >
-                      {item.title}
-                    </Typography>
-                  }
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {user !== null &&
+            getNavData(user.type).map((item) => (
+              <ListItem
+                key={item.title}
+                onClick={() => navigate(item.path)}
+                disablePadding
+              >
+                <ListItemButton>
+                  <ListItemIcon color="black">{item.icon}</ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        sx={{
+                          color: "black",
+                          fontSize: 20,
+                          fontFamily: "poppins",
+                        }}
+                      >
+                        {item.title}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
         </List>
       </Drawer>
       <Box

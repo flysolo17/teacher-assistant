@@ -4,7 +4,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import { Campaign } from "@mui/icons-material";
 import NoteIcon from "@mui/icons-material/Note";
-export const navData = [
+export const teacherNavData = [
   {
     title: "Mga Klase",
     path: "/classroom",
@@ -17,8 +17,20 @@ export const navData = [
   },
   {
     title: "Anunsyo",
-    path: "/anunsyo",
+    path: "/announcement",
     icon: <Campaign />,
+  },
+  {
+    title: "Aking profile",
+    path: "/profile",
+    icon: <AccountCircleIcon />,
+  },
+];
+export const studentNavData= [
+  {
+    title: "Mga Klase",
+    path: "/classroom",
+    icon: <HomeIcon />,
   },
   {
     title: "Aking profile",

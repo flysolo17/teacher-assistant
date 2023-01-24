@@ -145,7 +145,7 @@ const TakeQuizPage: React.FunctionComponent<TakeQuizPageProps> = () => {
         }}
         spacing={2}
       >
-        <Button color="error" size="large">
+        <Button color="error" size="large" onClick={() => navigate(-1)}>
           Cancel
         </Button>
         <Button

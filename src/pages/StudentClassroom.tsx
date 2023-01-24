@@ -2,6 +2,7 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   CircularProgress,
   Container,
   Divider,
@@ -20,6 +21,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
 import { cpSync } from "fs";
 import { useEffect, useState } from "react";
@@ -35,12 +37,16 @@ import StudentQuizCard from "../components/StudentQuizCard";
 import { useAuth } from "../context/AuthContext";
 import {
   computeUnAnsweredQuiz,
+  currentAnnouncement,
+  formatDate1,
   getLessonsPerQuarter,
   getLessonsQuarters,
   getQuarters,
-  quarters,
 } from "../utils/Constants";
-import { DataObject } from "@mui/icons-material";
+import AnnouncementCard from "../components/AnnouncementCard";
+import StudentAnnouncementCard from "../components/StudentAnnouncementCard";
+import { ArrowBack } from "@mui/icons-material";
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -85,6 +91,7 @@ const StudentClassroomPage: React.FunctionComponent<
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
   const [quiz, setQuiz] = useState<any[]>([]);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -128,6 +135,25 @@ const StudentClassroomPage: React.FunctionComponent<
       return () => unsub();
     }
   }, []);
+  useEffect(() => {
+    if (id !== undefined) {
+      const ref = collection(firestore, "Announcements");
+      const q = query(
+        ref,
+        where("classrooms", "array-contains", id),
+        orderBy("date", "desc")
+      );
+      const unsub = onSnapshot(q, (snapshot) => {
+        let data: any = [];
+        snapshot.forEach((doc) => {
+          data.push({ ...doc.data(), id: doc.id });
+        });
+        setAnnouncements(data);
+        console.log("announce", data);
+      });
+      return () => unsub();
+    }
+  }, []);
 
   function getQuizPerQuarter(quarter: number): any[] {
     return quiz.filter((data) => data.quarter == quarter);
@@ -160,52 +186,68 @@ const StudentClassroomPage: React.FunctionComponent<
       <Stack
         sx={{
           width: "25%",
-
           padding: 2,
         }}
         direction={"column"}
       >
-        <Container
+        <Stack
+          direction={"column"}
           sx={{
-            padding: 2,
-            borderRadius: 5,
-            backgroundColor: "#CAFBDA",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+            paddingBottom: "1rem",
           }}
         >
-          <Avatar
-            src={teacher?.profile[teacher.profile.length - 1]}
+          <Container
             sx={{
-              width: 100,
-              height: 100,
-              border: 2,
-              borderColor: "white",
-            }}
-          />
-          <Typography
-            sx={{
-              fontFamily: "Poppins",
-              fontWeight: 400,
-              fontSize: 25,
-              fontStyle: "normal",
+              padding: 2,
+              borderRadius: 5,
+              backgroundColor: "#CAFBDA",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
             }}
           >
-            {teacher?.firstName} {teacher?.middleName} {teacher?.lastName}
-          </Typography>
-          <Typography
-            sx={{
-              fontFamily: "Poppins",
-              fontWeight: 400,
-              fontSize: 20,
-              fontStyle: "normal",
-            }}
+            <Avatar
+              src={teacher?.profile[teacher.profile.length - 1]}
+              sx={{
+                width: 100,
+                height: 100,
+                border: 2,
+                borderColor: "white",
+              }}
+            />
+            <Typography
+              sx={{
+                fontFamily: "Poppins",
+                fontWeight: 400,
+                fontSize: 25,
+                fontStyle: "normal",
+              }}
+            >
+              {teacher?.firstName} {teacher?.middleName} {teacher?.lastName}
+            </Typography>
+            <Typography
+              sx={{
+                fontFamily: "Poppins",
+                fontWeight: 400,
+                fontSize: 20,
+                fontStyle: "normal",
+              }}
+            >
+              Guro
+            </Typography>
+          </Container>
+          <Button
+            variant="text"
+            color="success"
+            startIcon={<ArrowBack />}
+            onClick={() => navigate(-1)}
           >
-            Guro
-          </Typography>
-        </Container>
+            Bumalik
+          </Button>
+        </Stack>
       </Stack>
       <Stack
         sx={{
@@ -221,6 +263,7 @@ const StudentClassroomPage: React.FunctionComponent<
             borderRadius: 5,
             backgroundColor: "#CAFBDA",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -235,6 +278,34 @@ const StudentClassroomPage: React.FunctionComponent<
           >
             {classroom?.className}
           </Typography>
+          {currentAnnouncement(announcements).length != 0 && (
+            <Box
+              sx={{
+                width: "50%",
+                padding: "1rem",
+                margin: "1rem",
+                borderLeft: "3px solid red",
+                backgroundColor: "white",
+              }}
+            >
+              <Typography
+                gutterBottom
+                variant="h6"
+                component="div"
+                sx={{
+                  color: " #070707",
+                  fontFamily: "Poppins",
+                  fontStyle: "regular",
+                  fontWeight: 400,
+                }}
+              >
+                {currentAnnouncement(announcements)[0].message}
+              </Typography>
+              <Typography>
+                {formatDate1(currentAnnouncement(announcements)[0].date)}
+              </Typography>
+            </Box>
+          )}
         </Box>
         <Box sx={{ width: "100%" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -262,14 +333,12 @@ const StudentClassroomPage: React.FunctionComponent<
                 }
                 {...a11yProps(1)}
               />
+              <Tab label="Anunsyo" {...a11yProps(2)} />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
             {classroom != null &&
               (classroom.lessons != null && classroom?.lessons.length > 0 ? (
-                // classroom.lessons.map((data, index) => (
-                //   <LessonsCard key={index} lesson={data} />
-                // ))
                 getLessonsQuarters(classroom.lessons).map(
                   (quarter, quarterIndex) => (
                     <Stack direction={"column"} key={quarterIndex}>
@@ -361,6 +430,11 @@ const StudentClassroomPage: React.FunctionComponent<
                   ))}
                 </Grid>
               </Stack>
+            ))}
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            {announcements.map((data, index) => (
+              <StudentAnnouncementCard key={index} announcement={data} />
             ))}
           </TabPanel>
         </Box>

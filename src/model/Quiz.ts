@@ -10,6 +10,7 @@ export interface Quiz {
   quarter: number;
   isOpen: boolean;
   showResult: false;
+  classrooms: string[];
   createdAt: number;
 }
 

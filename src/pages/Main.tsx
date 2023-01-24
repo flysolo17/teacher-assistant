@@ -49,13 +49,12 @@ const MainPage: React.FunctionComponent<MainPageProps> = (props) => {
   }
   return (
     <>
-   
         {!loading &&
           user != null &&
           (user.type == "Teacher" ? <TeacherHomePage /> : <StudentHomePage />)}
-
     </>
   );
+  
 };
 
 export default MainPage;

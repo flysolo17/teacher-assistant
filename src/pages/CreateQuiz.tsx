@@ -13,13 +13,14 @@ import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
-import { quarters } from "../utils/Constants";
+import { quarters, timestamp } from "../utils/Constants";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { firestore } from "../config/config";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { AddBox } from "@mui/icons-material";
+import { Quiz } from "../model/Quiz";
 interface CreateQuizPageProps {}
 
 const CreateQuizPage: React.FunctionComponent<CreateQuizPageProps> = () => {
@@ -85,19 +86,21 @@ const CreateQuizPage: React.FunctionComponent<CreateQuizPageProps> = () => {
   ) => {
     e.preventDefault();
     if (id !== undefined) {
+      const quiz: Quiz = {
+        name: name,
+        desc: desc,
+        questions: questions,
+        students: [],
+        quarter: parseInt(quarter),
+        isOpen: true,
+        showResult: false,
+        classrooms: [],
+        createdAt: timestamp(),
+      };
       try {
         const docRef = await addDoc(
           collection(firestore, "Classroom", id!, "Quiz"),
-          {
-            name: name,
-            desc: desc,
-            questions: questions,
-            students: [],
-            quarter: parseInt(quarter),
-            isOpen: true,
-            showResult: false,
-            createdAt: new Date().getTime() / 1000,
-          }
+          quiz
         );
         navigate(-1);
         console.log("Document written with ID: ", docRef.id);

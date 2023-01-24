@@ -3,7 +3,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { firestore } from "../config/config";
 import { Quiz, quizConverter } from "../model/Quiz";
@@ -12,6 +12,7 @@ import {
   Container,
   Divider,
   FormControlLabel,
+  IconButton,
   List,
   Stack,
   Switch,
@@ -23,6 +24,11 @@ import { useState } from "react";
 import TeacherQuestionCard from "../components/TeacherQuestionCard";
 import Responses from "../components/Responses";
 import { responsesScores } from "../utils/Constants";
+
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import MenuIcon from "@mui/icons-material/Menu";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -66,6 +72,7 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  const navigate = useNavigate();
 
   const { id, quizID } = useParams();
   const [quiz, setQuiz] = React.useState<Quiz>();
@@ -108,6 +115,24 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
   }, []);
   return (
     <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+          <Toolbar variant="dense">
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit" component="div">
+              {quiz?.name}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </Box>
       <Box sx={{ padding: 2 }}>
         <Typography variant="h3" gutterBottom>
           {quiz?.name}

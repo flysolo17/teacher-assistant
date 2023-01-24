@@ -1,3 +1,4 @@
+import { Announcement } from "./../model/Announcement";
 import class1 from "../images/class01.jpg";
 import class2 from "../images/class02.jpg";
 import class3 from "../images/class03.jpg";
@@ -142,6 +143,9 @@ export const getQuarters = (list: Quiz[]): number[] => {
   const current = list.map((data) => data.quarter);
   return current.filter((value, index) => current.indexOf(value) === index);
 };
+export const timestamp = (): number => {
+  return new Date().getTime();
+};
 
 export const getLessonsQuarters = (list: Lesson[]): number[] => {
   const current = list.map((data) => data.quarter);
@@ -176,7 +180,6 @@ export const getScore = (quiz: Quiz, myID: string): string => {
 
 export const getStudent = (quiz: Quiz, myID: string): Student => {
   const quizzee = quiz.students.filter((student) => student.studentID == myID);
-
   return quizzee[0];
 };
 export const responsesScores = (quiz: Quiz, student: Student): string => {
@@ -204,3 +207,33 @@ export const computeUnAnsweredQuiz = (quiz: Quiz[], myID: string): number => {
   });
   return result;
 };
+export const formatDate1 = (timestamp: number): string => {
+  return new Date(timestamp).toDateString();
+};
+
+export const currentAnnouncement = (
+  announcement: Announcement[]
+): Announcement[] => {
+  const data = announcement.filter(
+    (data) =>
+      data.date >= startOfDay(timestamp()) && data.date <= endOfDay(timestamp())
+  );
+  return data.reverse();
+};
+
+//set the  time of the moment into (0-0-1)
+export function startOfDay(timstamp: number) {
+  var date = new Date(timstamp);
+  date.setHours(0);
+  date.setMinutes(0);
+  date.setSeconds(1);
+  return date.getTime();
+}
+//set the time of the moment into (23-59-59)
+export function endOfDay(timestamp: number) {
+  var date = new Date(timestamp);
+  date.setHours(23);
+  date.setMinutes(59);
+  date.setSeconds(59);
+  return date.getTime();
+}

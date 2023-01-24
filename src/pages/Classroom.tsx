@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertTitle,
+  AppBar,
   Box,
   Button,
   Collapse,
@@ -11,6 +12,7 @@ import {
   IconButton,
   List,
   Paper,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
@@ -42,7 +44,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../context/AuthContext";
 import QuizCard from "../components/QuizCard";
 import { Height } from "@mui/icons-material";
-
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 interface ClassroomPageProps {}
 
 const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
@@ -160,7 +162,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
       setPickedFile(file);
       setOpen(true);
     } else {
-      console.error("Invalid");
+      alert("Invalid File");
     }
   };
 
@@ -202,13 +204,15 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                 </li>
               ))
             ) : (
-              <h1>Wala pang studyante</h1>
+              <Typography
+                sx={{ textAlign: "center" }}
+                component={"h2"}
+                variant={"h6"}
+              >
+                Wala pang studyante
+              </Typography>
             ))}
-          <Typography
-            component={"h2"}
-            variant={"h5"}
-            sx={{ margin: 2 }}
-          ></Typography>
+          <Divider />
           {users.map((user) => (
             <li key={user.id}>
               {!classroom?.students.includes(user.id) && (
@@ -228,9 +232,29 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
         <Divider orientation="vertical" flexItem />
       </Container>
       <Container sx={{ width: "50%" }}>
-        <Typography component={"h2"} variant={"h3"} sx={{ margin: 2 }}>
-          {classroom?.className}
-        </Typography>
+        <Stack
+          direction={"row"}
+          sx={{ justifyContent: "space-between", padding: "1rem" }}
+        >
+          <Typography component={"h2"} variant={"h5"}>
+            {classroom?.className}
+          </Typography>
+          <Button
+            variant="contained"
+            component="label"
+            startIcon={<AddIcon />}
+            color="warning"
+          >
+            Mag upload ng aralin
+            <input
+              hidden
+              accept="application/pdf, application/msword, image/*"
+              type="file"
+              onChange={handdleOnChange}
+            />
+          </Button>
+        </Stack>
+
         <Divider />
         <Container
           sx={{
@@ -239,7 +263,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
             height: "90%",
           }}
         >
-                 {" "}
+          {" "}
           {classroom != null &&
             (classroom.lessons != null && classroom?.lessons.length > 0 ? (
               classroom.lessons.map((data, index) => (
@@ -257,13 +281,11 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                 direction={"column"}
                 spacing={1}
               >
-                                 {" "}
-                <img src={nolessons} width="500px" height={"400px"} />         
-                       {" "}
+                {" "}
+                <img src={nolessons} width="500px" height={"400px"} />{" "}
                 <Typography component={"h2"} variant={"h5"}>
-                                      Wala pang mga aralin                  {" "}
-                </Typography>
-                               {" "}
+                  Wala pang mga aralin{" "}
+                </Typography>{" "}
               </Stack>
             ))}
         </Container>
@@ -296,6 +318,13 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
           ))}
         </List>
       </Container>
+      <ConFirmLesson
+        open={open}
+        handleClose={handleClose}
+        handleOpen={handleClickOpen}
+        file={pickedFile}
+        classroomID={id!}
+      />
     </Stack>
   );
 };
