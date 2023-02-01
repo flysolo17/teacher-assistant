@@ -22,6 +22,8 @@ import { experimentalStyled as styled } from "@mui/material/styles";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { PROFILE_PATH } from "../utils/Constants";
 import LogoutIcon from "@mui/icons-material/Logout";
+
+import EditIcon from "@mui/icons-material/Edit";
 interface AccountPageProps {}
 
 const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
@@ -87,7 +89,6 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
                   width: 150,
                   height: 30,
                   color: "black",
-
                   borderColor: "black",
                   "&:hover": {
                     backgroundColor: "#0069d9",
@@ -99,8 +100,9 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
                 size="small"
                 onClick={() => navigate("/profile/edit/" + currentUser?.uid!)}
               >
-                Edit
+                Palitan
               </Button>
+
               <IconButton
                 aria-label="logout"
                 sx={{ color: "black" }}
@@ -109,7 +111,20 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
                 <LogoutIcon />
               </IconButton>
             </Stack>
-
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              sx={{
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+              onClick={() =>
+                navigate("/profile/edit-password/" + currentUser?.uid)
+              }
+            >
+              Mag Palit ng Password
+            </Button>
             <Stack direction={"column"} sx={{ marginY: 2 }}>
               <p className="email">{users?.email}</p>
               <p className="type">{users?.type}</p>

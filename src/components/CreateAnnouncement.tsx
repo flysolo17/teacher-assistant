@@ -124,9 +124,9 @@ const CreateAnnouncementDialog: React.FunctionComponent<
           </List>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Icancela</Button>
+          <Button onClick={handleClose}>Ikansela</Button>
           <Button onClick={() => createAnnouncement()} autoFocus>
-            Ideclara
+            Ideklara
           </Button>
         </DialogActions>
       </Dialog>

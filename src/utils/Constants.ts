@@ -262,31 +262,31 @@ export const developers = [
   {
     name: "Jed O. Gomez ",
     image: Jed,
-    title: "Team leader / Web Developer",
-    role: "As a team leader and developer I make sure that our team is working together (test lang)",
+    title: "Web Developer",
+    role: "",
   },
   {
     name: "Dave Andrew P. Doranio",
     image: Dave,
     title: "UI/UX designer",
-    role: "test",
+    role: "",
   },
   {
     name: "Mariztela Joyce S. Gacia ",
     image: Mariztela,
     title: "Reserch papers",
-    role: "test",
+    role: "",
   },
   {
     name: "Angelika S. Songco",
     image: Angelika,
     title: "Assistant Designer",
-    role: "test",
+    role: "",
   },
   {
     name: "Rommel M. Bacuel",
     image: Rommel,
     title: "Web Developer",
-    role: "test",
+    role: "",
   },
 ];

@@ -78,6 +78,7 @@ const ViewQuizCard: React.FunctionComponent<ViewQuizCardProps> = (props) => {
         >
           Answer: {question.answer}
         </Typography>
+        
       </Stack>
     </Paper>
   );

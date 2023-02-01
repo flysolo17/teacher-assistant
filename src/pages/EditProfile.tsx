@@ -122,7 +122,7 @@ const EditProfilePage: React.FunctionComponent<EditProfilePageProps> = () => {
             spacing={1}
           >
             <Avatar
-              src={user?.profile[user.profile.length  - 1]}
+              src={user?.profile[user.profile.length - 1]}
               alt="profile"
               sx={{ width: 120, height: 120 }}
             />
@@ -210,7 +210,7 @@ const EditProfilePage: React.FunctionComponent<EditProfilePageProps> = () => {
             color={"success"}
             onClick={updateFullname}
           >
-            Save
+            Isubmit
           </Button>
         </Stack>
       </Paper>

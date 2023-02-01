@@ -31,6 +31,7 @@ import MyStudentsPage from "./pages/MyStudents";
 import CreateActivityPage from "./pages/CreateActivity";
 import DevelopersPage from "./pages/Developers";
 import StudentGradePage from "./pages/StudentGrade";
+import UpdatePasswordPage from "./pages/UpdatePassword";
 export interface IApplicationProps {}
 const App: React.FunctionComponent<IApplicationProps> = (props) => {
   const currentUser: User | null = auth.currentUser;
@@ -133,6 +134,14 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
             element={
               <AuthRoute>
                 <EditProfilePage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/profile/edit-password/:id"
+            element={
+              <AuthRoute>
+                <UpdatePasswordPage />
               </AuthRoute>
             }
           />

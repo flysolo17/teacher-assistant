@@ -36,6 +36,8 @@ const Responses: React.FunctionComponent<ResponsesProps> = (props) => {
       .catch((err) => {})
       .finally(() => {});
   }
+  const fullname =
+    user?.firstName + " " + user?.middleName + " " + user?.lastName;
   React.useEffect(() => {
     getStudentInfo(student.studentID);
   }, []);
@@ -77,7 +79,7 @@ const Responses: React.FunctionComponent<ResponsesProps> = (props) => {
                   fontSize: 24,
                 }}
               >
-                {user?.firstName}
+                {fullname}
               </Typography>
             }
           />

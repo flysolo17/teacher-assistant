@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Divider,
+  IconButton,
   Stack,
   TextField,
   Typography,
@@ -10,6 +11,7 @@ import {
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   onSnapshot,
@@ -45,7 +47,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import DeleteIcon from "@mui/icons-material/Delete";
 interface CreateActivityPageProps {}
 
 const CreateActivityPage: React.FunctionComponent<CreateActivityPageProps> = (
@@ -136,6 +138,15 @@ const CreateActivityPage: React.FunctionComponent<CreateActivityPageProps> = (
     }
   }
 
+  async function deleteLesson(id: string) {
+    try {
+      const docRef = await deleteDoc(doc(firestore, "Activities", id));
+      alert("Tagumpay");
+    } catch (e) {
+      alert(e);
+    }
+  }
+
   const handdleOnChange = (e: any) => {
     const file = e.target.files[0];
     if (file.size < 5000000) {
@@ -145,21 +156,23 @@ const CreateActivityPage: React.FunctionComponent<CreateActivityPageProps> = (
     }
   };
 
-  async function getActivities(id: string) {
+  function getActivities(id: string) {
     console.log("activities");
     const q = query(
       collection(firestore, "Activities"),
       where("teacher", "==", id),
       orderBy("createdAt", "desc")
     );
-    const querySnapshot = await getDocs(q);
-    let data: any[] = [];
-    querySnapshot.forEach((doc) => {
-      data.push({ ...doc.data(), id: doc.id });
+    const unsub = onSnapshot(q, (snapshot) => {
+      let data: any[] = [];
+      snapshot.forEach((doc) => {
+        data.push({ ...doc.data(), id: doc.id });
+      });
+      setActivities(data);
     });
-    setActivities(data);
-    console.log("activities", data);
+    return () => unsub();
   }
+
   useEffect(() => {
     if (currentUser != null) {
       getActivities(currentUser.uid);
@@ -246,7 +259,7 @@ const CreateActivityPage: React.FunctionComponent<CreateActivityPageProps> = (
             id="filled-basic"
             value={activityName}
             onChange={(e) => setActivityName(e.target.value)}
-            label="Pangalan ng aktividad"
+            label="Pangalan ng aktibidad"
             variant="filled"
           />
 
@@ -302,12 +315,13 @@ const CreateActivityPage: React.FunctionComponent<CreateActivityPageProps> = (
                 <TableCell align="right">
                   <h4>Date</h4>
                 </TableCell>
+                <TableCell align="right"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {activities.map((row) => (
                 <TableRow
-                  key={row.name}
+                  key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
@@ -316,6 +330,14 @@ const CreateActivityPage: React.FunctionComponent<CreateActivityPageProps> = (
                   <TableCell align="left">{getMarkahan(row.quarter)}</TableCell>
                   <TableCell align="right">
                     {new Date(row.createdAt).toLocaleDateString("en-us")}
+                  </TableCell>
+                  <TableCell align={"right"}>
+                    <IconButton
+                      color="error"
+                      onClick={() => deleteLesson(row.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

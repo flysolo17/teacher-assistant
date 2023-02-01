@@ -18,11 +18,7 @@ export const teacherNavData = [
     path: "/create-activity",
     icon: <NoteAddIcon />,
   },
-  {
-    title: "Pagsusulit",
-    path: "/quiz",
-    icon: <NoteIcon />,
-  },
+
 
   {
     title: "Anunsyo",

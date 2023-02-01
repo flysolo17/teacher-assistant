@@ -4,7 +4,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useNavigate, useParams } from "react-router-dom";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { firestore } from "../config/config";
 import { Quiz, quizConverter } from "../model/Quiz";
 import {
@@ -76,6 +76,7 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
   const { id, quizID } = useParams();
   const [quiz, setQuiz] = React.useState<Quiz>();
   const [toggleOpen, setToggleOpen] = useState(quiz?.isOpen);
+
   const [toggleShowAnswer, setToggleShowAnswer] = useState(quiz?.showResult);
   const updateIsOpen = async () => {
     if (id !== undefined && quizID !== undefined) {
@@ -112,6 +113,18 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
       return () => unsub();
     }
   }, []);
+  async function deleteQuiz() {
+    if (id !== undefined && quizID !== undefined) {
+      try {
+        const docRef = doc(firestore, "Classroom", id, "Quiz", quizID);
+        const task = await deleteDoc(docRef);
+        alert("Tagumpay");
+        navigate(-1);
+      } catch (e) {
+        alert(e);
+      }
+    }
+  }
   return (
     <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
       <Box sx={{ flexGrow: 1 }}>
@@ -215,7 +228,7 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
                     fontStyle: "normal",
                   }}
                 >
-                  Open Quiz
+                  Buksan ang pagsusulit
                 </Typography>
               }
               labelPlacement="start"
@@ -241,12 +254,20 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
                     fontStyle: "normal",
                   }}
                 >
-                  Show Result
+                  Ipakita ang resulta
                 </Typography>
               }
               labelPlacement="start"
             />
           )}
+
+          <Button
+            variant={"contained"}
+            color={"error"}
+            onClick={() => deleteQuiz()}
+          >
+            Idelete
+          </Button>
         </Paper>
       </TabPanel>
     </Box>
