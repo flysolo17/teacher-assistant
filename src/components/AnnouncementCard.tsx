@@ -7,6 +7,7 @@ import { Button, CardActionArea, CardActions } from "@mui/material";
 import { formatDate1 } from "../utils/Constants";
 import { deleteDoc, doc } from "firebase/firestore";
 import { firestore } from "../config/config";
+import { Link } from "react-router-dom";
 interface AnnouncementCardProps {
   announcement: Announcement;
 }
@@ -23,12 +24,23 @@ const AnnouncementCard: React.FunctionComponent<AnnouncementCardProps> = (
       .catch((err) => alert(err.message));
   };
   return (
-    <Card sx={{ width: "50%" }}>
+    <Card sx={{ width: "100%" }}>
       <CardActionArea>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {announcement.message}
           </Typography>
+
+          {announcement.link != "" && (
+            <Button
+              variant="outlined"
+              href={announcement.link}
+              sx={{ marginBottom: 1 }}
+            >
+              Bisitahin
+            </Button>
+          )}
+
           <Typography variant="body1" color="text.primary">
             {formatDate1(announcement.date)}
           </Typography>

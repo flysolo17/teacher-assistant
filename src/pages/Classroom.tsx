@@ -21,6 +21,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -36,15 +37,11 @@ import { useNavigate } from "react-router-dom";
 
 import UsersCard from "../components/UsersCard";
 import StudentsCard from "../components/StudentsCard";
-import { v4 as uuidV4 } from "uuid";
 import ConFirmLesson from "../alerts/ConfirmLesson";
-import { Lesson } from "../model/Lesson";
 import LessonsCard from "../components/LessonsCard";
-import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../context/AuthContext";
 import QuizCard from "../components/QuizCard";
-import { Height } from "@mui/icons-material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { act } from "react-dom/test-utils";
 interface ClassroomPageProps {}
 
 const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
@@ -52,11 +49,32 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
   const [classroom, setClassroom] = useState<Classroom>();
   const [invitation, setInvitation] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const [pickedFile, setPickedFile] = useState(null);
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [quiz, setQuiz] = useState<any[]>([]);
-  const { currentUser } = useAuth();
+
+  async function getActivities(id: string) {
+    console.log("activities");
+    const q = query(
+      collection(firestore, "Activities"),
+      where("classroomID", "array-contains", id),
+      orderBy("createdAt", "desc")
+    );
+    const querySnapshot = await getDocs(q);
+    let data: any[] = [];
+    querySnapshot.forEach((doc) => {
+      data.push({ ...doc.data(), id: doc.id });
+    });
+    setActivities(data);
+    console.log("activities", data);
+  }
+  useEffect(() => {
+    if (id != undefined) {
+      getActivities(id);
+    }
+  }, []);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -155,17 +173,6 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
     });
     return () => unsub();
   }, []);
-
-  const handdleOnChange = (e: any) => {
-    const file = e.target.files[0];
-    if (file.size < 5000000) {
-      setPickedFile(file);
-      setOpen(true);
-    } else {
-      alert("Invalid File");
-    }
-  };
-
   return (
     <Stack
       sx={{
@@ -175,14 +182,13 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
       }}
       direction="row"
     >
-      <Container sx={{ width: "20%", overflow: "auto" }}>
+      <Container sx={{ width: "25%", overflow: "auto" }}>
         <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
           Mga Studyante
         </Typography>
         <List
           sx={{
             width: "100%",
-            maxWidth: 360,
             position: "relative",
             overflow: "auto",
             maxHeight: "100%s",
@@ -231,7 +237,7 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
 
         <Divider orientation="vertical" flexItem />
       </Container>
-      <Container sx={{ width: "50%" }}>
+      <Container sx={{ width: "45%" }}>
         <Stack
           direction={"row"}
           sx={{ justifyContent: "space-between", padding: "1rem" }}
@@ -239,20 +245,6 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
           <Typography component={"h2"} variant={"h5"}>
             {classroom?.className}
           </Typography>
-          <Button
-            variant="contained"
-            component="label"
-            startIcon={<AddIcon />}
-            color="warning"
-          >
-            Mag upload ng aralin
-            <input
-              hidden
-              accept="application/pdf, application/msword, image/*"
-              type="file"
-              onChange={handdleOnChange}
-            />
-          </Button>
         </Stack>
 
         <Divider />
@@ -264,9 +256,9 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
           }}
         >
           {" "}
-          {classroom != null &&
-            (classroom.lessons != null && classroom?.lessons.length > 0 ? (
-              classroom.lessons.map((data, index) => (
+          {activities != null &&
+            (activities != null && activities.length > 0 ? (
+              activities.map((data, index) => (
                 <LessonsCard key={index} lesson={data} />
               ))
             ) : (
@@ -281,11 +273,10 @@ const ClassroomPage: React.FunctionComponent<ClassroomPageProps> = (props) => {
                 direction={"column"}
                 spacing={1}
               >
-                {" "}
                 <img src={nolessons} width="500px" height={"400px"} />{" "}
                 <Typography component={"h2"} variant={"h5"}>
-                  Wala pang mga aralin{" "}
-                </Typography>{" "}
+                  Wala pang mga aralin
+                </Typography>
               </Stack>
             ))}
         </Container>

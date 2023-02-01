@@ -18,6 +18,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -41,6 +42,7 @@ import {
   formatDate1,
   getLessonsPerQuarter,
   getLessonsQuarters,
+  getMarkahan,
   getQuarters,
 } from "../utils/Constants";
 import AnnouncementCard from "../components/AnnouncementCard";
@@ -92,6 +94,7 @@ const StudentClassroomPage: React.FunctionComponent<
   const navigate = useNavigate();
   const [quiz, setQuiz] = useState<any[]>([]);
   const [announcements, setAnnouncements] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -121,6 +124,27 @@ const StudentClassroomPage: React.FunctionComponent<
       setTeacher(snap.data());
     }
   }
+
+  async function getActivities(id: string) {
+    console.log("activities");
+    const q = query(
+      collection(firestore, "Activities"),
+      where("classroomID", "array-contains", id),
+      orderBy("createdAt", "desc")
+    );
+    const querySnapshot = await getDocs(q);
+    let data: any[] = [];
+    querySnapshot.forEach((doc) => {
+      data.push({ ...doc.data(), id: doc.id });
+    });
+    setActivities(data);
+    console.log("activities", data);
+  }
+  useEffect(() => {
+    if (id != undefined) {
+      getActivities(id);
+    }
+  }, []);
   useEffect(() => {
     if (id !== undefined) {
       const ref = collection(firestore, "Classroom", id, "Quiz");
@@ -301,6 +325,14 @@ const StudentClassroomPage: React.FunctionComponent<
               >
                 {currentAnnouncement(announcements)[0].message}
               </Typography>
+              <Button
+                variant="outlined"
+                href={currentAnnouncement(announcements)[0].link}
+                sx={{ marginBottom: 1 }}
+              >
+                Bisitahin
+              </Button>
+
               <Typography>
                 {formatDate1(currentAnnouncement(announcements)[0].date)}
               </Typography>
@@ -337,40 +369,38 @@ const StudentClassroomPage: React.FunctionComponent<
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            {classroom != null &&
-              (classroom.lessons != null && classroom?.lessons.length > 0 ? (
-                getLessonsQuarters(classroom.lessons).map(
-                  (quarter, quarterIndex) => (
-                    <Stack direction={"column"} key={quarterIndex}>
-                      <Typography
-                        sx={{
-                          fontFamily: "Poppins",
-                          fontWeight: 400,
-                          fontSize: 30,
-                          fontStyle: "bold",
-                          marginY: 2,
-                          color: "black",
-                        }}
-                      >
-                        Quarter {quarter}
-                      </Typography>
-                      <Divider />
-                      <Grid
-                        container
-                        spacing={{ xs: 2, md: 3 }}
-                        columns={{ xs: 4, sm: 8, md: 12 }}
-                      >
-                        {getLessonsPerQuarter(quarter, classroom.lessons).map(
-                          (data, index) => (
-                            <Grid item xs={2} sm={4} md={4} key={index}>
-                              <LessonsCard lesson={data} />
-                            </Grid>
-                          )
-                        )}
-                      </Grid>
-                    </Stack>
-                  )
-                )
+            {activities != null &&
+              (activities != null && activities.length > 0 ? (
+                getLessonsQuarters(activities).map((quarter, quarterIndex) => (
+                  <Stack direction={"column"} key={quarterIndex}>
+                    <Typography
+                      sx={{
+                        fontFamily: "Poppins",
+                        fontWeight: 400,
+                        fontSize: 30,
+                        fontStyle: "bold",
+                        marginY: 2,
+                        color: "black",
+                      }}
+                    >
+                      {getMarkahan(quarter)}
+                    </Typography>
+                    <Divider />
+                    <Grid
+                      container
+                      spacing={{ xs: 2, md: 3 }}
+                      columns={{ xs: 4, sm: 8, md: 12 }}
+                    >
+                      {getLessonsPerQuarter(quarter, activities).map(
+                        (data, index) => (
+                          <Grid item xs={2} sm={4} md={4} key={index}>
+                            <LessonsCard lesson={data} />
+                          </Grid>
+                        )
+                      )}
+                    </Grid>
+                  </Stack>
+                ))
               ) : (
                 <Stack
                   sx={{

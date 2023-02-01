@@ -73,7 +73,6 @@ const ViewQuizPage: React.FunctionComponent<ViewQuizPageProps> = () => {
     setValue(newValue);
   };
   const navigate = useNavigate();
-
   const { id, quizID } = useParams();
   const [quiz, setQuiz] = React.useState<Quiz>();
   const [toggleOpen, setToggleOpen] = useState(quiz?.isOpen);

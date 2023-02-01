@@ -27,6 +27,7 @@ const AnnouncementPage: React.FunctionComponent<AnnouncementPageProps> = () => {
   const { currentUser } = useAuth();
   const [classroom, setClassroom] = useState<any[]>([]);
   const [announcement, setAnnouncement] = useState("");
+  const [link, setLink] = useState("");
   const [announementList, setAnnouncementList] = useState<any[]>([]);
   useEffect(() => {
     if (currentUser != null) {
@@ -85,12 +86,13 @@ const AnnouncementPage: React.FunctionComponent<AnnouncementPageProps> = () => {
         <p className="name">Anunsyo </p>
       </div>
       <Divider />
-      <Stack direction={"column"} spacing={2} sx={{ alignItems: "center" }}>
+      <Stack direction={"row"} spacing={2}>
         <Paper
           sx={{
-            width: "50%",
+            width: "20%",
             padding: "1rem",
             display: "flex",
+            height: "250px",
             flexDirection: "column",
             alignItems: "center",
             backgroundColor: "white",
@@ -110,15 +112,27 @@ const AnnouncementPage: React.FunctionComponent<AnnouncementPageProps> = () => {
             rows={4}
             variant="standard"
           />
+          <TextField
+            id="standard-multiline-static"
+            label="Link"
+            fullWidth
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            color="success"
+            variant="standard"
+          />
           <CreateAnnouncementDialog
             message={announcement}
             classroom={classroom}
+            link={link}
             teacherID={currentUser?.uid!}
           />
         </Paper>
-        {announementList.map((value, index) => (
-          <AnnouncementCard key={index} announcement={value} />
-        ))}
+        <Stack direction={"column"} spacing={2} sx={{ flexGrow: 1 }}>
+          {announementList.map((value, index) => (
+            <AnnouncementCard key={index} announcement={value} />
+          ))}
+        </Stack>
       </Stack>
     </Stack>
   );

@@ -8,7 +8,6 @@ export interface Classroom {
   createdAt: number;
   color: string;
   students: Array<string>;
-  lessons: Array<Lesson>;
   teacher: string;
 }
 export const classroomConveter = {

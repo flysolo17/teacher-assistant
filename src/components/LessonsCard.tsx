@@ -74,8 +74,6 @@ const LessonsCard: React.FunctionComponent<LessonsCardProps> = (props) => {
           >
             {lesson.name}
           </Typography>
-
-          <Typography>{formatBytes(lesson.size)}</Typography>
         </CardContent>
         <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
           <IconButton onClick={() => downloadPdf()}>

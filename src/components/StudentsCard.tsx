@@ -22,6 +22,8 @@ import { async } from "@firebase/util";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BackspaceIcon from "@mui/icons-material/Backspace";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useNavigate } from "react-router-dom";
 interface IStudentsCardProps {
   user: Users;
   userID: string;
@@ -32,6 +34,7 @@ interface IStudentsCardProps {
 const StudentsCard: React.FunctionComponent<IStudentsCardProps> = (props) => {
   const { user, userID, index, classroomID } = props;
   const fullName = user.firstName + " " + user.middleName + " " + user.lastName;
+  const navigate = useNavigate();
   const deleteStudent = () => {
     updateDoc(doc(firestore, "Classroom", classroomID), {
       students: arrayRemove(user.id),
@@ -41,6 +44,9 @@ const StudentsCard: React.FunctionComponent<IStudentsCardProps> = (props) => {
       .finally(() => {
         console.log("done");
       });
+  };
+  const navigateToStudentProfile = (id: string) => {
+    navigate("student/" + id);
   };
   return (
     <>
@@ -61,6 +67,13 @@ const StudentsCard: React.FunctionComponent<IStudentsCardProps> = (props) => {
           </Stack>
           <IconButton aria-label="delete" color="error" onClick={deleteStudent}>
             <DeleteIcon />
+          </IconButton>
+          <IconButton
+            aria-label="viewprofile"
+            color="success"
+            onClick={() => navigateToStudentProfile(user.id)}
+          >
+            <AccountCircleIcon />
           </IconButton>
         </Stack>
 

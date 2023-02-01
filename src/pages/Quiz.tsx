@@ -42,32 +42,7 @@ const QuizPage: React.FunctionComponent<QuizPageProps> = () => {
   };
   return (
     <Container>
-      <Stack
-        direction={"row"}
-        sx={{ padding: "1rem", justifyContent: "space-between" }}
-      >
-        <Typography component={"h2"} variant={"h5"} sx={{ margin: 2 }}>
-          Pagsusulit
-        </Typography>
-
-        <Button
-          color={"success"}
-          variant={"contained"}
-          onClick={navigateToCreateQuiz}
-        >
-          Gumawa ng pagsusulit
-        </Button>
-      </Stack>
-      <Divider />
-      <List sx={{ width: "100%", height: "100%", overflow: "auto" }}>
-        {quiz.map((data) => (
-          <QuizCard
-            quiz={data}
-            key={data.id}
-            clickQuiz={() => navigateToViewQuiz(data.id)}
-          />
-        ))}
-      </List>
+      <p>Under Development</p>
     </Container>
   );
 };

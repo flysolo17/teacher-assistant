@@ -30,6 +30,7 @@ const TeacherAnnouncementPage: React.FunctionComponent<
   const [classroom, setClassroom] = useState<any[]>([]);
   const [announcement, setAnnouncement] = useState("");
   const [announementList, setAnnouncementList] = useState<any[]>([]);
+  const [link, setLink] = useState("");
   useEffect(() => {
     if (currentUser != null) {
       getAllClassroom(currentUser.uid);
@@ -112,9 +113,19 @@ const TeacherAnnouncementPage: React.FunctionComponent<
             rows={4}
             variant="standard"
           />
+          <TextField
+            id="standard-multiline-static"
+            label="link"
+            fullWidth
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            color="success"
+            variant="standard"
+          />
           <CreateAnnouncementDialog
             message={announcement}
             classroom={classroom}
+            link={link}
             teacherID={currentUser?.uid!}
           />
         </Paper>

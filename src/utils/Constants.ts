@@ -1,3 +1,4 @@
+import { Activities } from "./../model/Activities";
 import { Announcement } from "./../model/Announcement";
 import class1 from "../images/class01.jpg";
 import class2 from "../images/class02.jpg";
@@ -16,6 +17,12 @@ import DOC from "../images/doc.png";
 import { Quiz } from "../model/Quiz";
 import { Lesson } from "../model/Lesson";
 import { Student } from "../model/Student";
+
+import Dave from "../images/dave.png";
+import Mariztela from "../images/Mariztela.png";
+import Angelika from "../images/angelika.png";
+import Jed from "../images/jed.png";
+import Rommel from "../images/Rommel.png";
 export const colorPicker: string[] = [
   "#C7C6FA",
   "#97F8C0",
@@ -123,19 +130,19 @@ export function formatTimestamp(timestamp: number) {
 export const quarters = [
   {
     value: "1",
-    label: "1ST QUARTER",
+    label: "Unang Markahan",
   },
   {
     value: "2",
-    label: "2ND QUARTER",
+    label: "Ikalawang Markahan",
   },
   {
     value: "3",
-    label: "3RD QUARTER",
+    label: "Ikatlong Markahan",
   },
   {
     value: "4",
-    label: "4TH QUARTER",
+    label: "Ikaapat na markahan",
   },
 ];
 
@@ -147,7 +154,7 @@ export const timestamp = (): number => {
   return new Date().getTime();
 };
 
-export const getLessonsQuarters = (list: Lesson[]): number[] => {
+export const getLessonsQuarters = (list: Activities[]): number[] => {
   const current = list.map((data) => data.quarter);
   return current.filter((value, index) => current.indexOf(value) === index);
 };
@@ -237,3 +244,49 @@ export function endOfDay(timestamp: number) {
   date.setSeconds(59);
   return date.getTime();
 }
+export function getMarkahan(num: number): string {
+  if (num == 1) {
+    return "Unang Markahan";
+  } else if (num == 2) {
+    return "Pangalawang Markahan";
+  } else if (num == 3) {
+    return "Ikatlong Markahan";
+  } else if (num == 4) {
+    return "Ikapat na Markahan";
+  } else {
+    return "Walang nakalagay";
+  }
+}
+
+export const developers = [
+  {
+    name: "Jed O. Gomez ",
+    image: Jed,
+    title: "Team leader / Web Developer",
+    role: "As a team leader and developer I make sure that our team is working together (test lang)",
+  },
+  {
+    name: "Dave Andrew P. Doranio",
+    image: Dave,
+    title: "UI/UX designer",
+    role: "test",
+  },
+  {
+    name: "Mariztela Joyce S. Gacia ",
+    image: Mariztela,
+    title: "Reserch papers",
+    role: "test",
+  },
+  {
+    name: "Angelika S. Songco",
+    image: Angelika,
+    title: "Assistant Designer",
+    role: "test",
+  },
+  {
+    name: "Rommel M. Bacuel",
+    image: Rommel,
+    title: "Web Developer",
+    role: "test",
+  },
+];

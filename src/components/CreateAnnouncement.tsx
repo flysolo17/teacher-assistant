@@ -19,6 +19,7 @@ import { firestore } from "../config/config";
 import { timestamp } from "../utils/Constants";
 interface CreateAnnouncementDialogProps {
   message: string;
+  link: string;
   classroom: any[];
   teacherID: string;
 }
@@ -26,7 +27,7 @@ interface CreateAnnouncementDialogProps {
 const CreateAnnouncementDialog: React.FunctionComponent<
   CreateAnnouncementDialogProps
 > = (props) => {
-  const { message, classroom, teacherID } = props;
+  const { message, classroom, teacherID, link } = props;
   const [open, setOpen] = React.useState(false);
   const [classes, setClasses] = React.useState<string[]>([]);
   const handleClickOpen = () => {
@@ -63,6 +64,7 @@ const CreateAnnouncementDialog: React.FunctionComponent<
         id: id,
         teacherID: teacherID,
         message: message,
+        link: link,
         classrooms: classes,
         date: timestamp(),
       };

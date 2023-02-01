@@ -27,6 +27,15 @@ const StudentAnnouncementCard: React.FunctionComponent<
             {formatDate1(announcement.date)}
           </Typography>
         </CardContent>
+        <CardActions>
+          <Button
+            variant="outlined"
+            href={announcement.link}
+            sx={{ marginBottom: 1 }}
+          >
+            Bisitahin
+          </Button>
+        </CardActions>
       </CardActionArea>
     </Card>
   );
