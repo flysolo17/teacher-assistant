@@ -10,8 +10,17 @@ import {
   Container,
   CircularProgress,
   Typography,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  IconButton,
 } from "@mui/material";
-import { Email, Password } from "@mui/icons-material";
+import {
+  Email,
+  Password,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
 import KeyIcon from "@mui/icons-material/Key";
 import SendIcon from "@mui/icons-material/Send";
 import PersonAdd from "@mui/icons-material/PersonAdd";
@@ -34,6 +43,14 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
     event.preventDefault();
     login(email, password);
     navigate("/");
+  };
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
   };
 
   if (loading)
@@ -60,7 +77,6 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
                 onChange={(e) => setEmail(e.target.value)}
                 id="demo-helper-text-aligned"
                 label="Email"
-                size="small"
                 type={"email"}
                 InputProps={{
                   endAdornment: (
@@ -70,23 +86,31 @@ const LoginPage: React.FunctionComponent<ILoginPageProps> = (props) => {
                   ),
                 }}
               />
-              <TextField
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                helperText=" "
-                size="small"
-                id="demo-helper-text-aligned-no-helper"
-                label="Password"
-                type={"password"}
-                InputProps={{
-                  endAdornment: (
+
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
                     <InputAdornment position="end">
-                      <Password />
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
                     </InputAdornment>
-                  ),
-                }}
-              />
+                  }
+                />
+              </FormControl>
               <Button
                 variant={"contained"}
                 fullWidth

@@ -19,16 +19,10 @@ export const teacherNavData = [
     icon: <NoteAddIcon />,
   },
 
-
   {
     title: "Anunsyo",
     path: "/announcement",
     icon: <Campaign />,
-  },
-  {
-    title: "Aming Grupo",
-    path: "/developers",
-    icon: <GroupsIcon />,
   },
   {
     title: "Aking profile",
@@ -48,11 +42,7 @@ export const studentNavData = [
     path: "/grades",
     icon: <ClassIcon />,
   },
-  {
-    title: "Aming Grupo",
-    path: "/developers",
-    icon: <GroupsIcon />,
-  },
+
   {
     title: "Aking profile",
     path: "/profile",

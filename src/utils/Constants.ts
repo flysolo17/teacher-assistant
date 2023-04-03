@@ -274,7 +274,7 @@ export const developers = [
   {
     name: "Mariztela Joyce S. Gacia ",
     image: Mariztela,
-    title: "Reserch papers",
+    title: "Reserch Paper",
     role: "",
   },
   {

@@ -143,19 +143,21 @@ const AccountPage: React.FunctionComponent<AccountPageProps> = (props) => {
             Mga Litrato
           </Typography>
           <Divider sx={{ marginY: 2, backgroundColor: "black" }} />
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {users?.profile.map((url) => {
-              return (
-                <Grid item xs={2} sm={4} md={4}>
-                  <img src={url} loading="lazy" height={300} width={300} />
-                </Grid>
-              );
-            })}
-          </Grid>
+          {users?.profile?.length != 0 && (
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+              {users?.profile.map((url) => {
+                return (
+                  <Grid item xs={2} sm={4} md={4}>
+                    <img src={url} loading="lazy" height={300} width={300} />
+                  </Grid>
+                );
+              })}
+            </Grid>
+          )}
         </Stack>
       </div>
     </>

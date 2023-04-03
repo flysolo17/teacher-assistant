@@ -10,8 +10,6 @@ import { CircularProgress, Container } from "@mui/material";
 interface MainPageProps {}
 
 const MainPage: React.FunctionComponent<MainPageProps> = (props) => {
-
-
   const { currentUser, loading } = useAuth();
   const [user, setUser] = useState<Users | null>(null);
 
@@ -49,12 +47,11 @@ const MainPage: React.FunctionComponent<MainPageProps> = (props) => {
   }
   return (
     <>
-        {!loading &&
-          user != null &&
-          (user.type == "Teacher" ? <TeacherHomePage /> : <StudentHomePage />)}
+      {!loading &&
+        user != null &&
+        (user.type == "Teacher" ? <TeacherHomePage /> : <StudentHomePage />)}
     </>
   );
-  
 };
 
 export default MainPage;

@@ -22,7 +22,9 @@ import { useAuth } from "../context/AuthContext";
 import { firestore } from "../config/config";
 import { doc, getDoc } from "firebase/firestore";
 import { userConverter, Users } from "../model/User";
-import { CircularProgress, Container } from "@mui/material";
+import { Avatar, CircularProgress, Container, IconButton } from "@mui/material";
+import "../styles/nav.css";
+import LogoutIcon from "@mui/icons-material/Logout";
 const drawerWidth = 300;
 
 interface Props {
@@ -36,7 +38,7 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const { currentUser, loading } = useAuth();
+  const { currentUser, loading, logout } = useAuth();
   const [user, setUser] = useState<Users | null>(null);
 
   async function getAccount() {
@@ -121,7 +123,11 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
             Teacher Assistant
           </Typography>
         </Stack>
-        <List>
+        <List
+          sx={{
+            height: "80%",
+          }}
+        >
           {user !== null &&
             getNavData(user.type).map((item) => (
               <ListItem
@@ -148,7 +154,39 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
               </ListItem>
             ))}
         </List>
+        <Stack sx={{ padding: 1 }} direction={"row"} spacing={1}>
+          <Avatar
+            sx={{ width: 60, height: 60 }}
+            src={user?.profile[user.profile.length - 1]}
+            alt={"profile"}
+          />
+          <Stack direction={"column"}>
+            <Typography
+              variant={"h6"}
+              component={"h5"}
+              sx={{
+                color: " #070707",
+                fontFamily: "Poppins",
+                fontStyle: "regular",
+                fontWeight: 400,
+              }}
+            >
+              {user?.firstName + " " + user?.middleName + " " + user?.lastName}
+            </Typography>
+            <Typography
+              variant={"h6"}
+              sx={{
+                fontFamily: "Poppins",
+                fontStyle: "regular",
+                fontWeight: 400,
+              }}
+            >
+              {user?.type}
+            </Typography>
+          </Stack>
+        </Stack>
       </Drawer>
+
       <Box
         component="main"
         sx={{
