@@ -25,6 +25,7 @@ import { userConverter, Users } from "../model/User";
 import { Avatar, CircularProgress, Container, IconButton } from "@mui/material";
 import "../styles/nav.css";
 import LogoutIcon from "@mui/icons-material/Logout";
+import path from "path";
 const drawerWidth = 300;
 
 interface Props {
@@ -64,6 +65,7 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
             width: "100%",
             height: "100vh",
             display: "flex",
+
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -84,20 +86,30 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
       return studentNavData;
     }
   }
+
   return (
     <Box
       sx={{
         display: "flex",
       }}
     >
-      <CssBaseline />
       <AppBar
         position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+        sx={{
+          width: `calc(100% - ${drawerWidth}px)`,
+          ml: `${drawerWidth}px`,
+        }}
       ></AppBar>
       <Drawer
+        PaperProps={{
+          sx: {
+            backgroundColor: "#0A1929",
+            color: "white",
+          },
+        }}
         sx={{
           width: drawerWidth,
+          backgroundColor: "",
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
@@ -114,7 +126,7 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
             component={"h1"}
             padding={5}
             sx={{
-              color: " #070707",
+              color: " white",
               fontFamily: "Poppins",
               fontStyle: "regular",
               fontWeight: 400,
@@ -126,22 +138,30 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
         <List
           sx={{
             height: "80%",
+            color: "white",
           }}
         >
           {user !== null &&
             getNavData(user.type).map((item) => (
               <ListItem
+                className="active"
                 key={item.title}
                 onClick={() => navigate(item.path)}
                 disablePadding
               >
                 <ListItemButton>
-                  <ListItemIcon color="black">{item.icon}</ListItemIcon>
+                  <ListItemIcon
+                    sx={{
+                      color: "white",
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
                   <ListItemText
                     primary={
                       <Typography
                         sx={{
-                          color: "black",
+                          color: "white",
                           fontSize: 20,
                           fontFamily: "poppins",
                         }}
@@ -165,7 +185,7 @@ const NavigationBar: React.FunctionComponent<Props> = (props) => {
               variant={"h6"}
               component={"h5"}
               sx={{
-                color: " #070707",
+                color: "whitesmoke",
                 fontFamily: "Poppins",
                 fontStyle: "regular",
                 fontWeight: 400,
